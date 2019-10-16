@@ -10,10 +10,9 @@ function customer_register_ticket($ticket_n){
 }
 function has_pending_ticket($ticket_n){
     return isset($_SESSION['ticketN']) ? $_SESSION['ticketN'] : false;
-    $_SESSION['ticketN'] = $ticket_n;
 }
 
 function get_ticket($ticket_n){
-
+    return $_SESSION['ticketN'];
 }
 ?>
