@@ -11,16 +11,17 @@ function connectMySQL() {
         return $mysqli;
     }
 
-function get_user_data($username){
+function get_user_data($front_office){
         $conn = connectMySQL(); 
-        $sql = "SELECT * FROM User WHERE Username = '{$username}'";
+        $sql = "SELECT * FROM Authentication WHERE FrontOffice= '{$front_office}'";
         $userinfo = array();
         if ($result = $conn->query($sql)) {
             /* fetch object array */
             while ($row = $result->fetch_object()) {
                 $userinfo['usergroup'] = $row->Permission;
-                $userinfo['username'] = $row->Username;
+                $userinfo['front_office'] = $row->FrontOffice;
                 $userinfo['name'] = $row->Name;
+                $userinfo['multiple_service'] = $row->Jolly;
             }
             $result->close();
             return $userinfo;
@@ -30,10 +31,10 @@ function get_user_data($username){
     }
 
 function user_login($post_data) {
-        $username= $post_data["username"];
+        $front_office= $post_data["front_office"];
         $password = $post_data["password"]; 
 		$success = false;
-		/*if(!is_email($username)){
+		/*if(!is_email($front_office)){
 			return $success;
 		}*/
 		
@@ -43,8 +44,8 @@ function user_login($post_data) {
 			return $success;
 		}
 		// Here using prepared statement to avoid SQLi
-		$query = $mysqli->prepare("SELECT Password FROM User WHERE username = ?");
-		$query->bind_param('s', $username);
+		$query = $mysqli->prepare("SELECT Password FROM Authentication WHERE FrontOffice = ?");
+		$query->bind_param('s', $front_office);
 		$res = $query->execute();
 		if(!$res){
             printf("Error message: %s\n", $mysqli->error);
@@ -53,7 +54,7 @@ function user_login($post_data) {
 
 		$query->store_result();
 		$query->bind_result($pass);
-		// In case of success there should be just 1 user for a given username (username is also a primary key for its table)
+		// In case of success there should be just 1 user for a given front_office (front_office is also a primary key for its table)
 		if ($query->num_rows != 1) {
 			return $success;
 		}
@@ -66,14 +67,14 @@ function user_login($post_data) {
 		$query->close();
         $mysqli->close();
         // TODO check
-        $userinfo = get_user_data($username);
+        $userinfo = get_user_data($front_office);
         set_usergroup($userinfo['usergroup']);
         set_name($userinfo['name']);
-        set_username($userinfo['username']);
+        set_front_office($userinfo['front_office']);
 		return $success;
 	}
 
-    function register($username, $password) {
+    function register($front_office, $password) {
         $success = false;
         // TODO: eventually edit with has_permission() (related to admin capabilities to add clerk)
 		if(is_logged()){
@@ -93,9 +94,9 @@ function user_login($post_data) {
 		$hashed_password = password_hash($password, PASSWORD_DEFAULT, $options);
 		// In a real scenario it should be a nice practice to generate an activation code and let the user confirm that value (ex. with a link)
 		//$activation_code = rand(100, 999).rand(100,999).rand(100,999); 
-		$sql = "INSERT INTO User (username, password) VALUES (?, ?)";
+		$sql = "INSERT INTO Authentication (FrontOffice, password) VALUES (?, ?)";
 		$query = $mysqli->prepare($sql);
-		$query->bind_param('ss', $username,$hashed_password);
+		$query->bind_param('ss', $front_office,$hashed_password);
 		$res = $query->execute();
 		if(!$res){
             printf("Error message: %s\n", $mysqli->error);
@@ -104,9 +105,9 @@ function user_login($post_data) {
 		else{
 			$query->close();
 			$mysqli->close();
-            $username_enc = urlencode($username);
+            $front_office_enc = urlencode($front_office);
             $url = PLATFORM_PATH;
-            $url .= "register.php?username=".$username_enc;
+            $url .= "register.php?front_office=".$front_office_enc;
 			die( "<meta http-equiv='refresh' content='1; url=$url' />");
 		}
     }
@@ -117,7 +118,7 @@ function user_login($post_data) {
     
     // Login check functions 
     function is_logged(){
-        return isset($_SESSION['username']);
+        return isset($_SESSION['front_office']);
     }
     function is_admin(){//TODO: test
         return isset($_SESSION['usergroup']) ? $_SESSION['usergroup']=="Admin" : false;
@@ -126,14 +127,14 @@ function user_login($post_data) {
         return isset($_SESSION['usergroup']) ? $_SESSION['usergroup']=="Clerk" : false;
     }
     // set login
-    function set_logged($username){
-        $_SESSION['username'] = $username;
+    function set_logged($front_office){
+        $_SESSION['front_office'] = $front_office;
         return;
     }
 
-    //Memorizza nelle sessioni lo username
-    function set_username($username){
-        $_SESSION['username'] = $username;
+    //Memorizza nelle sessioni lo front_office
+    function set_front_office($front_office){
+        $_SESSION['front_office'] = $front_office;
         return;
     }
     
@@ -147,8 +148,8 @@ function user_login($post_data) {
         return;
     }
      //Restituisce la mail memorizzata nelle sessioni o stringa vuota se non settata 
-    function get_username(){
-        return isset($_SESSION['username']) ? $_SESSION['username'] : '';
+    function get_front_office(){
+        return isset($_SESSION['front_office']) ? $_SESSION['front_office'] : '';
     }
 
     function get_name(){

@@ -24,7 +24,8 @@ function get_ticket(){
 function get_distance_from_top(){
     $ticket_info = get_ticket();
     //TODO: Implement queue_distance_from_top
-    //queue_distance_from_top($ticket_info);
+    //qdis = queue_distance_from_top($ticket_info);
+    return qdis();
 }
 
 ?>

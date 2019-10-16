@@ -18,7 +18,7 @@ function add_top($service_name){
             else{
                 $query->close();
                 $mysqli->close();
-                $username_enc = urlencode($username);
+                $front_office_enc = urlencode($front_office);
                 $url = PLATFORM_PATH;
                 die( "<meta http-equiv='refresh' content='1; url=$url' />");
             }
@@ -31,7 +31,7 @@ function get_bottom($service_name){
             /* fetch object array */
             while ($row = $result->fetch_object()) {
                 $userinfo['usergroup'] = $row->Permission;
-                $userinfo['username'] = $row->Username;
+                $userinfo['front_office'] = $row->front_office;
                 $userinfo['name'] = $row->Name;
             }
             $result->close();
