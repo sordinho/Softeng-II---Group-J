@@ -1,6 +1,15 @@
 <?php
 require_once('config.php');
-
+require_once('queue.php');
+/* 
+There are 2 type if user(a customer is not considered as *user* in this context):
+- Admin: Can do some unique actions like adding a new Service
+- Clerk: There are 2 types of clerk. You need to check the serviceID with get serviceID()=> 
+            sID <- serviceID()
+            if sID = 0) The operator should serve the shortest queue.
+            if sID != 0) The operator always should elaborate the same service (pick always from the queue record with serviceID=sID)
+        Note: use get_serviceID() to check if that frontoffice should check the shortest queue to pick up the ticket to serve (every time a new ticket should be dequeued). 
+        */ 
 function connectMySQL() {
         $mysqli = new mysqli(DBAddr, DBUser, DBPassword, DBName);
         /* check connection */
@@ -21,7 +30,7 @@ function get_user_data($front_office){
                 $userinfo['usergroup'] = $row->Permission;
                 $userinfo['front_office'] = $row->FrontOffice;
                 $userinfo['name'] = $row->Name;
-                $userinfo['multiple_service'] = $row->Jolly;
+                $userinfo['serviceID'] = $row->ServiceID;
             }
             $result->close();
             return $userinfo;
@@ -71,6 +80,8 @@ function user_login($post_data) {
         set_usergroup($userinfo['usergroup']);
         set_name($userinfo['name']);
         set_front_office($userinfo['front_office']);
+        if($userinfo["serviceID"] != -1)// admin has a -1 value on serviceID field
+            set_serviceID($userinfo["serviceID"]);
 		return $success;
 	}
 
@@ -141,11 +152,12 @@ function user_login($post_data) {
     // Memorizza nelle sessioni anche il nome dell'utente
     function set_name($name){
         $_SESSION['name'] = ucfirst($name);
-        return;
+    }
+    function set_serviceID($serviceID){
+        $_SESSION['serviceID'] = $serviceID;
     }
     function set_usergroup($usergroup){
         $_SESSION['usergroup'] = $usergroup;
-        return;
     }
      //Restituisce la mail memorizzata nelle sessioni o stringa vuota se non settata 
     function get_front_office(){
@@ -155,11 +167,19 @@ function user_login($post_data) {
     function get_name(){
         return isset($_SESSION['name']) ? $_SESSION['name'] : '';
     }   
-        
+    function get_serviceID(){
+        return isset($_SESSION['serviceID']) ? $_SESSION['serviceID'] : false; 
+    }
     function get_usergroup(){
         return isset($_SESSION['usergroup']) ? $_SESSION['usergroup'] : '';
     }
 
+    function get_clerk_content(){
+        
+    }
+    function get_clerk_side_content(){
+        
+    }
 
     // Check functions
     function is_email($email){

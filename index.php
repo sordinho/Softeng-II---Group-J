@@ -92,6 +92,12 @@ $side_content = '
 </section>
 ';
 
+if(is_clerk()){
+  //TODO: implement get_clerk_sidecontent (maybe show Service currently offered and FrontOffice name)
+  // and            get_clerk_content (show ticketN of current customer and update that value when click on a button)
+  //$content = get_clerk_content();
+  //$side_content = get_clerk_side_content(); 
+}
 // Finally render the full page: 1)centered (main) content and 2)the side one (on the right)
 render_page($content, $side_content);
 ?>

@@ -3,7 +3,18 @@ require_once('config.php');
 require_once('functions.php');
 require_once('user.php');
 
+/*
+TODOS and ideas:
+When customer click on a button and do a GET request on a page a session is set with the info about the generated ticket.
+In this way we can refresh the page every X secs (or do an ajax request) to get info about scheduled remaining time.
+Note that, when a ticket is generated and so an INSERT in the Queue table is done , the timestamp is automatically generated 
+        so just retrieve and keep that info saved as well
 
+        In addition we need an info of some sort like the actual number being served for that service to clear the session 
+    after the customer requested is done.
+
+*/
+/* This files conains all the functions regardings to customer (active and passive) action */
 // Customer ticket handler
 function customer_register_ticket($ticket_info){
     $_SESSION['ticketN'] = $ticket_info["ticketN"];

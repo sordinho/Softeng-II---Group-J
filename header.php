@@ -6,14 +6,13 @@ require_once("user.php");
 $hidden_menu = "";
 if(!is_logged()) {
 	$navbar_edit = '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myModal"> Login </a></li>';
-	// TODO: eventually show this just if admin
-	$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#registerModal"> Register new clerk</a></li>';
 
 }
 else{
     $navbar_edit = '<li class="nav-item"><a class="nav-link" href="'.PLATFORM_PATH.'/logout.php"> Logout </a></li>';
 }
 if(is_admin()){
+	$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#registerModal"> Register new clerk</a></li>';
     $hidden_menu .= '
 	<li class="nav-item dropdown">
 		<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
@@ -98,7 +97,7 @@ echo '<!-- Modal Login -->
 						</div>
 						<div class="form-group">
 							<label for="password"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
-							<input type="text" class="form-control" name="password" id="password" placeholder="Enter password">
+							<input type="password" class="form-control" name="password" id="password" placeholder="Enter password">
 						</div>
 						<div class="checkbox">
 							<label><input type="checkbox" value="" checked>Remember me</label>
