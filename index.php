@@ -17,8 +17,8 @@ $content = <<< EOT
 EOT;
 
 # Define the logic
-# If user not authenticated and a post requested with username was sent => try login
-if(!isset($_SESSION['username']) && isset($_POST['username'])) {
+# If user not authenticated and a post requested with front_office was sent => try login
+if(!isset($_SESSION['front_office']) && isset($_POST['front_office'])) {
   echo "Trying to login... wait";
   
   if( user_login($_POST) ) {
