@@ -6,7 +6,7 @@ if($_GET['action'] == "generateTicket"){
     // Call generate ticket function
     //$ticketinfo = get_a_new_ticket($serviceID (or $serviceName))
     // Following code is just to let the frontend work for now: TODO: remove when ready token generation
-    $ticket_info["ticketN"] = 1;
+    $ticket_info["ticketN"] = 10;
     $ticket_info["service"] = "GUITest";
     customer_register_ticket($ticket_info);
     $content = '

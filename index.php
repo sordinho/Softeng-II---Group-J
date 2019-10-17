@@ -104,7 +104,7 @@ elseif(has_pending_ticket()){
   $content = get_ticket_html();
 }
 else{
-  $content = <<< EOT
+  $content = '
       <!-- The container  -->
       <div class="container">
         <div class="wrapper">
@@ -124,7 +124,7 @@ else{
         </form>
       </div>
       </div>
-EOT;
+';
 }
 // Finally render the full page: 1)centered (main) content and 2)the side one (on the right)
 render_page($content, $side_content);
