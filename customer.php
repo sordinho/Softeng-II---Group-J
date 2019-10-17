@@ -44,6 +44,12 @@ function get_ticket_html(){
     $ticket_info = get_ticket();
     $format_ticket = sprintf("%03d", $ticket_info["ticketN"]);
     $format_cur_ticket = sprintf("%03d", $ticket_info["ticketN"]-3);
+    // Test format for GUI rappresentation
+    // TODO: implement get_timestamp($ticket_info) that returns the timestamp for a given ticket array
+    //$time = get_timestamp($ticket_info) // Decomment when ready and change dummytime to time
+    $date = date_create();
+    $dummytime= date_timestamp_get($date);
+    $format_date = timestamp_to_date($dummytime);
     $html_ticket = '
     <!-- Ticket HTML -->
     <div class="ticketContainer">
@@ -54,7 +60,7 @@ function get_ticket_html(){
             <path fill="currentColor" d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path>
         </svg><span class="san" data="Currently served">'.$format_cur_ticket.'</span>
         </li>
-        <li class="t_row"> <span class="date" data="Timestamp">26 NOV</span><span class="boarding" data="">22:09</span></li>
+        <li class="t_row"> <span class="date" data="Timestamp">'.$format_date["day"]." ".$format_date["month"].'</span><span class="boarding" data="">'.$format_date["time"].'</span></li>
         <li class="fo_row"> <span class="passenger" data="Choosen service:">'.$ticket_info["service"].'</span></li>
         <li class="fi_row"> 
         <svg class="barcode" xmlns="http://www.w3.org/2000/svg"> 

@@ -53,4 +53,10 @@ function connectMySQL() {
     return $mysqli;
 }
 
+function timestamp_to_date($timestamp){
+    $date['month'] = date("M", $timestamp);
+    $date['day']= date("d", $timestamp);
+    $date['time'] = date("H:i", $timestamp);
+    return $date;
+}
 ?>
