@@ -11,10 +11,20 @@ $content = <<< EOT
       <div class="container">
         <div class="wrapper">
           <br/>
-          <h1>Starter template</h1>
-          <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-          Test
-        </div>
+          <h1>Do you need a ticket?</h1>
+          <p class="lead">If you are a customer you can click the button below to generate a new ticket.<br></p>
+          <form action="./ticketDispatcher.php?action=generateTicket" method="POST">
+          <div class="form-group">
+              <label for="exampleFormControlSelect2">Service</label>
+              <select name = "service" class="form-control" id="service">
+              <option value="1" selected>Packages</option>
+              <option value="2">GUITest</option>
+              <option value="0">Two</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Generate a ticket</button>
+        </form>
+      </div>
       </div>
 EOT;
 
