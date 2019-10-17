@@ -24,7 +24,7 @@ function customer_register_ticket($ticket_info){
 function customer_register_timestamp($timestamp){
     $_SESSION['timestamp'] = $timestamp;
 }
-function customer_get_timestamp($timestamp){
+function customer_get_timestamp(){
     return isset($_SESSION['timestamp']) ? $_SESSION['timestamp'] : false;
 }
 function has_pending_ticket(){
@@ -52,7 +52,7 @@ function get_ticket_html(){
     $format_ticket = sprintf("%03d", $ticket_info["ticketN"]);
     $format_cur_ticket = sprintf("%03d", $ticket_info["ticketN"]-3);//TODO:
     // Test format for GUI rappresentation
-    $time = customer_get_timestamp($ticket_info); 
+    $time = customer_get_timestamp();
     $format_timestamp = strtotime($time);
     $format_date = timestamp_to_date($format_timestamp);
     $html_ticket = '
