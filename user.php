@@ -81,7 +81,7 @@ function user_login($post_data) {
     function register($front_office, $password) {
         $success = false;
         // TODO: eventually edit with has_permission() (related to admin capabilities to add clerk)
-		if(is_logged()){
+		if(!is_admin()){
 			//die("You are already registered and logged in");
 			return $success;
 		}
@@ -98,7 +98,7 @@ function user_login($post_data) {
 		$hashed_password = password_hash($password, PASSWORD_DEFAULT, $options);
 		// In a real scenario it should be a nice practice to generate an activation code and let the user confirm that value (ex. with a link)
 		//$activation_code = rand(100, 999).rand(100,999).rand(100,999); 
-		$sql = "INSERT INTO Authentication (FrontOffice, password) VALUES (?, ?)";
+		$sql = "INSERT INTO Authentication (FrontOffice, password, Counter, ServiceID) VALUES (?, ?, 0, 0)";
 		$query = $mysqli->prepare($sql);
 		$query->bind_param('ss', $front_office,$hashed_password);
 		$res = $query->execute();
