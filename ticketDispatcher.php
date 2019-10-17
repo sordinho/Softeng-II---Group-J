@@ -8,7 +8,10 @@ if($_GET['action'] == "generateTicket" && isset($_POST['service'])){
     // Following code is just to let the frontend work for now: TODO: remove when ready token generation
     $ticket_info["ticketN"] = 10;
     $ticket_info["service"] = "GUITest";
+    // Easy way to avoid query
+    $ticket_info["service"] = $_POST['service']; 
     customer_register_ticket($ticket_info);
+    customer_register_timestamp($ticket_info['timestamp']);
     $content = '
     <div class="alert alert-success" role="alert">
         You got a ticket!<br>In a few seconds you will be redirected to home. If you are in a hurry <a href="./index.php" class="alert-link">just click here!</a>

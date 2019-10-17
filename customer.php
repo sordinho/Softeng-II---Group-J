@@ -19,6 +19,13 @@ Note that, when a ticket is generated and so an INSERT in the Queue table is don
 function customer_register_ticket($ticket_info){
     $_SESSION['ticketN'] = $ticket_info["ticketN"];
     $_SESSION['service'] = $ticket_info["service"];
+    $_SESSION['serviceID'] = $ticket_info["serviceID"];
+}
+function customer_register_timestamp($timestamp){
+    $_SESSION['timestamp'] = $timestamp;
+}
+function customer_get_timestamp($timestamp){
+    return isset($_SESSION['timestamp']) ? $_SESSION['timestamp'] : false;
 }
 function has_pending_ticket(){
     //return true;//TODO: remove or comment after testing

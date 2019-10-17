@@ -28,7 +28,7 @@ function add_top($service_name){
                     /* fetch object array */
                     $row = $result->fetch_object();
                     $ticket_info['ID'] = $row->ID;
-                    $ticket_info['service'] = $row->ServiceID;
+                    $ticket_info['serviceID'] = $row->ServiceID;
                     $ticket_info['ticketN'] = $row->TicketNumber;
                     $ticket_info['timestamp'] = $row->Timestamp;
                     $result->close();
