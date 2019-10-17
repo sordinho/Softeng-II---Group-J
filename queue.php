@@ -39,17 +39,14 @@ function add_top($service_name){
     }
 function get_bottom($service_name){
         $conn = connectMySQL(); 
-        $sql = "SELECT MIN(TicketNumber) FROM Queue JOIN Service ON ServiceID = Service.ID WHERE Service.Name = '$service_name'";
-        $userinfo = array();
+        $sql = "SELECT MIN(TicketNumber) as TicketN FROM Queue JOIN Service ON ServiceID = Service.ID WHERE Service.Name = '$service_name'";
         if ($result = $conn->query($sql)) {
             /* fetch object array */
-            while ($row = $result->fetch_object()) {
-                $userinfo['usergroup'] = $row->Permission;
-                $userinfo['front_office'] = $row->front_office;
-                $userinfo['name'] = $row->Name;
-            }
+            $row = $result->fetch_object();
+            $ticketN = $row->TicketN;
+        
             $result->close();
-            return $userinfo;
+            return $ticketN;
         } else{
             printf("Error message: %s\n", $conn->error);
         }
