@@ -3,6 +3,8 @@
 /**		File contenente le funzioni ausiliarie utilizzate		**/
 
 require_once("config.php");
+
+
 function render_page($content, $side_content){
     // Render header section
     include 'header.php';
@@ -40,4 +42,15 @@ function get_error($nerr){
 ';
     render_page($content, ""); // TODO: eventually add a side_content
 }
+
+function connectMySQL() {
+    $mysqli = new mysqli(DBAddr, DBUser, DBPassword, DBName);
+    /* check connection */
+    if ($mysqli->connect_errno) {
+        printf("Connect failed: %s\n", $mysqli->connect_errno);
+        exit();
+    }
+    return $mysqli;
+}
+
 ?>

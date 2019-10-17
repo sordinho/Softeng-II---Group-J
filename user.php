@@ -1,6 +1,8 @@
 <?php
 require_once('config.php');
 require_once('queue.php');
+require_once('functions.php');
+
 /* 
 There are 2 type if user(a customer is not considered as *user* in this context):
 - Admin: Can do some unique actions like adding a new Service
@@ -10,15 +12,6 @@ There are 2 type if user(a customer is not considered as *user* in this context)
             if sID != 0) The operator always should elaborate the same service (pick always from the queue record with serviceID=sID)
         Note: use get_serviceID() to check if that frontoffice should check the shortest queue to pick up the ticket to serve (every time a new ticket should be dequeued). 
         */ 
-function connectMySQL() {
-        $mysqli = new mysqli(DBAddr, DBUser, DBPassword, DBName);
-        /* check connection */
-        if ($mysqli->connect_errno) {
-            printf("Connect failed: %s\n", $mysqli->connect_errno);
-            exit();
-        }
-        return $mysqli;
-    }
 
 function get_user_data($front_office){
         $conn = connectMySQL(); 
