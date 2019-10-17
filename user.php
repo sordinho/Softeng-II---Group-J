@@ -22,7 +22,6 @@ function get_user_data($front_office){
             while ($row = $result->fetch_object()) {
                 $userinfo['usergroup'] = $row->Permission;
                 $userinfo['front_office'] = $row->FrontOffice;
-                $userinfo['name'] = $row->Name;
                 $userinfo['serviceID'] = $row->ServiceID;
             }
             $result->close();
