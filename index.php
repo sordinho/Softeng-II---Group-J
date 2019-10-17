@@ -2,6 +2,8 @@
 require_once('config.php');
 require_once('functions.php');
 require_once('user.php');
+require_once('customer.php');
+
 
 # Define the content of the page
 $content = <<< EOT
@@ -48,7 +50,7 @@ if(!isset($_SESSION['front_office']) && isset($_POST['front_office'])) {
       </div> ';
       $content .= "<meta http-equiv='refresh' content='3; url=".PLATFORM_PATH."' />"; 
   }
-}
+} 
 
 $side_content = '
 <section class="component-nstats">
@@ -97,6 +99,10 @@ if(is_clerk()){
   // and            get_clerk_content (show ticketN of current customer and update that value when click on a button)
   //$content = get_clerk_content();
   //$side_content = get_clerk_side_content(); 
+}
+// If a customer has a pending ticket just show the ticket info as content
+elseif(has_pending_ticket()){
+    $content = get_ticket_html();
 }
 // Finally render the full page: 1)centered (main) content and 2)the side one (on the right)
 render_page($content, $side_content);
