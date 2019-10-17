@@ -38,6 +38,7 @@ function get_ticketn(){
 function get_ticket(){
     $ticket_info["ticketN"] = $_SESSION['ticketN'];
     $ticket_info["service"] = $_SESSION['service'];
+    $ticket_info["serviceID"] = $_SESSION['serviceID'];
     return $ticket_info;
 }
 function get_distance_from_top(){
@@ -47,16 +48,13 @@ function get_distance_from_top(){
     return qdis();
 }
 function get_ticket_html(){
-    // TODO: Call the 2 methods to get timestamp and cur_ticket
     $ticket_info = get_ticket();
     $format_ticket = sprintf("%03d", $ticket_info["ticketN"]);
-    $format_cur_ticket = sprintf("%03d", $ticket_info["ticketN"]-3);
+    $format_cur_ticket = sprintf("%03d", $ticket_info["ticketN"]-3);//TODO:
     // Test format for GUI rappresentation
-    // TODO: implement get_timestamp($ticket_info) that returns the timestamp for a given ticket array
-    //$time = get_timestamp($ticket_info) // Decomment when ready and change dummytime to time
-    $date = date_create();
-    $dummytime= date_timestamp_get($date);
-    $format_date = timestamp_to_date($dummytime);
+    $time = customer_get_timestamp($ticket_info); 
+    $format_timestamp = strtotime($time);
+    $format_date = timestamp_to_date($format_timestamp);
     $html_ticket = '
     <!-- Ticket HTML -->
     <div class="ticketContainer">

@@ -9,7 +9,10 @@ if($_GET['action'] == "generateTicket" && isset($_POST['service'])){
     $ticket_info["ticketN"] = 10;
     $ticket_info["service"] = "GUITest";
     // Easy way to avoid query
+    $ticket_info = add_top($_POST['service']);
     $ticket_info["service"] = $_POST['service']; 
+
+    //print_r($ticket_info);//Array ( [ID] => 10 [serviceID] => 1 [ticketN] => 7 [timestamp] => 2019-10-17 18:39:29 )
     customer_register_ticket($ticket_info);
     customer_register_timestamp($ticket_info['timestamp']);
     $content = '
