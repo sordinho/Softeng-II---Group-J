@@ -13,6 +13,7 @@ else{
 }
 if(is_admin()){
 	$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#registerModal"> Register new clerk</a></li>';
+	$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#newServiceModal"> Register new service</a></li>';
     $hidden_menu .= '
 	<li class="nav-item dropdown">
 		<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
