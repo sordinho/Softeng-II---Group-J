@@ -6,26 +6,40 @@ require_once('user.php');
 
 // Queue ticket handler
 function add_top($service_name){
-
-    // Do an insert
+            // Do an insert and get back the info about the generated number
             $mysqli = connectMySQL(); 
-            $sql = 'INSERT INTO Queue(ServiceID, TicketNumber) SELECT ID,MAX(TicketNumber)+1  FROM Queue JOIN Service ON ServiceID=ID WHERE Service.Name = "$service_name" GROUP BY ServiceID';
+            $sql = 'INSERT INTO Queue(ServiceID, TicketNumber) SELECT Service.ID,MAX(TicketNumber)+1  FROM Queue JOIN Service ON ServiceID=Service.ID WHERE Service.Name = ? GROUP BY ServiceID';
             $query = $mysqli->prepare($sql);
+            //echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+            $query->bind_param('s', $service_name);
             $res = $query->execute();
+            $last_id = $mysqli->insert_id;
+            //print($last_id);
             if(!$res){
                 printf("Error message: %s\n", $mysqli->error);
                 return false;
             }
             else{
                 $query->close();
-                $mysqli->close();
-                $url = PLATFORM_PATH;
-                die( "<meta http-equiv='refresh' content='1; url=$url' />");
+                //die();
+                $sql = "SELECT * FROM Queue WHERE ID = '$last_id'";
+                $ticket_info= array();
+                if ($result = $mysqli->query($sql)) {
+                    /* fetch object array */
+                    $row = $result->fetch_object();
+                    $ticket_info['ID'] = $row->ID;
+                    $ticket_info['serviceID'] = $row->ServiceID;
+                    $ticket_info['ticketN'] = $row->TicketNumber;
+                    $ticket_info['timestamp'] = $row->Timestamp;
+                    $result->close();
+                    $mysqli->close();
+                }
+                return $ticket_info;
             }
     }
 function get_bottom($service_name){
         $conn = connectMySQL(); 
-        $sql = "SELECT MIN(TicketNumber) FROM Queue JOIN Service ON ServiceID = ID WHERE Service.Name = '$service_name'";
+        $sql = "SELECT MIN(TicketNumber) FROM Queue JOIN Service ON ServiceID = Service.ID WHERE Service.Name = '$service_name'";
         $userinfo = array();
         if ($result = $conn->query($sql)) {
             /* fetch object array */

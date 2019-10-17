@@ -147,9 +147,8 @@ elseif (has_pending_ticket()) {
           <div class="form-group">
               <label for="exampleFormControlSelect2">Service</label>
               <select name = "service" class="form-control" id="service">
-              <option value="1" selected>Packages</option>
-              <option value="2">GUITest</option>
-              <option value="0">Two</option>
+              <option value="Packages" selected>Packages</option>
+              <option value="Accounts">Accounts</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary">Generate a ticket</button>
