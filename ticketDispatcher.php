@@ -2,11 +2,10 @@
 require_once("customer.php");
 require_once("functions.php");
 
-if($_GET['action'] == "generateTicket"){
+if($_GET['action'] == "generateTicket" && isset($_POST['service'])){
     // Call generate ticket function
     //$ticketinfo = get_a_new_ticket($serviceID (or $serviceName))
     // Following code is just to let the frontend work for now: TODO: remove when ready token generation
-    if(isset($_POST["service"])){
     $ticket_info["ticketN"] = 10;
     $ticket_info["service"] = "GUITest";
     customer_register_ticket($ticket_info);
