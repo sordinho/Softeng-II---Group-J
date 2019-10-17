@@ -37,7 +37,6 @@ function add_top($service_name){
                 return $ticket_info;
             }
     }
-add_top("Packages");
 function get_bottom($service_name){
         $conn = connectMySQL(); 
         $sql = "SELECT MIN(TicketNumber) FROM Queue JOIN Service ON ServiceID = Service.ID WHERE Service.Name = '$service_name'";
