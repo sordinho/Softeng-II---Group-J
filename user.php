@@ -208,6 +208,8 @@ function get_clerk_content()
 
 function get_clerk_side_content()
 {
+    if (!is_clerk())
+        return false;
     $clerk_side_content = '
             
             <section class="component-nstats">
