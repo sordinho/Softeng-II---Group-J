@@ -130,7 +130,7 @@ else{
         // output data of each row
         while ($row = $result->fetch_assoc()) {
             //Adding option to the select input element based on services stored in the DB
-            $content .= "<option value=" . $row["Name"] . " >" . $row["Name"] . "</option>";
+            $content .= '<option value="' . $row["Name"] . '">' . $row["Name"] . '</option>';
         }
         $conn->close();
     }
