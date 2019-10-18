@@ -1,25 +1,31 @@
 <?php
 require_once("config.php");
 require_once("user.php");
+require_once("customer.php");
 
 // Handle hidden menu and navbar render (note that is related to the user status (loggedin/typeOfUser))
 $hidden_menu = "";
-if(!is_logged()) {
+if(!is_logged() && !has_pending_ticket()) {
 	$navbar_edit = '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myModal"> Login </a></li>';
 
 }
 else{
-    $navbar_edit = '<li class="nav-item"><a class="nav-link" href="'.PLATFORM_PATH.'logout.php"> Logout </a></li>';
+	$navbar_edit = '
+		<li class="nav-item">
+			<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Login</a>
+		</li>
+		';
+    $navbar_edit .= '<li class="nav-item"><a class="nav-link" href="'.PLATFORM_PATH.'logout.php"> Logout </a></li>';
 }
 if(is_admin()){
-	$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#registerModal"> Register new clerk</a></li>';
-	$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#newServiceModal"> Register new service</a></li>';
+	//$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#registerModal"> Register new clerk</a></li>';
+	//$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#newServiceModal"> Register new service</a></li>';
     $hidden_menu .= '
 	<li class="nav-item dropdown">
-		<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+		<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin actions</a>
 		<div class="dropdown-menu" aria-labelledby="dropdown01">
-		<a class="dropdown-item" href="#">Admin action</a>
-		<a class="dropdown-item" href="#">Another Admin action</a>
+		<a class="dropdown-item" data-toggle="modal" href="#registerModal">Register new clerk</a>
+		<a class="dropdown-item" href="#newServiceModal">Register new service</a>
 		</div>
 	</li>
 ';
@@ -27,10 +33,9 @@ if(is_admin()){
 elseif(is_logged()){// if not admin and logged => clerk
 	$hidden_menu .= '
 	<li class="nav-item dropdown">
-		<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+		<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Clerk actions</a>
 		<div class="dropdown-menu" aria-labelledby="dropdown01">
-		<a class="dropdown-item" href="#">Action Clerk1</a>
-		<a class="dropdown-item" href="#">Another Clerk action (2) </a>
+		<a class="dropdown-item" href="./clerkAction.php?action=nextTicket">Next customer</a>
 		</div>
 	</li>
 ';
@@ -69,14 +74,8 @@ print '<!DOCTYPE html>
 		<li class="nav-item active">
 			<a class="nav-link" href="'.PLATFORM_PATH.'">Home <span class="sr-only">(current)</span></a>
 		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="#">Link</a>
-		</li>
-		'.$navbar_edit.'
-		<li class="nav-item">
-			<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-		</li>
-		'.$hidden_menu.'
+		'.$navbar_edit
+		.$hidden_menu.'
 		</ul>
 		<form class="form-inline my-2 my-lg-0">
 		<input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
