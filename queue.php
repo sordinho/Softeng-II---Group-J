@@ -92,25 +92,18 @@ function get_next($serviceID) {
 
 }
 
-function delete_ticket($serviceID) {
+function delete_ticket($serviceID, $ticketN) {
     /*
-     * delete one ticket from the specified serviceID
+     * delete one ticket for the specified serviceID, ticketnum
      * if one row has been affected returns true
      * false instead
      */
     $conn = connectMySQL();
-    $sql = "select id from Queue where TicketNumber = (select MIN(TicketNumber) from Queue where ServiceID='$serviceID') and ServiceID='$serviceID'";
+    $service_id = intval($serviceID);
+    $ticket_n = intval($ticketN);
+    $sql = "DELETE FROM Queue WHERE TicketNumber = $ticket_n AND ServiceID=$service_id";
     if ($result = $conn->query($sql)) {
-        if ($result->num_rows > 0) {
-            $id = $result->fetch_assoc();
-            if ($result2 = $conn->query("delete from Queue where id='$id'")) {
-                return ($result2->num_rows === 1);
-            } else {
-                printf("Error message: %s\n", $conn->error);
-                return false;
-            }
-        }
-        return false;
+        return ($result->num_rows > 0);
     } else {
         printf("Error message: %s\n", $conn->error);
         return false;
