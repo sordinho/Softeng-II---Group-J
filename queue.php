@@ -61,7 +61,7 @@ function get_next($serviceID) {
          * with the minimum timestamp i.e. higher waiting time
          */
         $conn = connectMySQL();
-        $sql = "select s.service service, s.ticket num, timestamp, MAX(s.count) count from (select ServiceID service, COUNT(*) count, MIN(TicketNumber) ticket, MIN(timestamp) timestamp from queue GROUP BY ServiceID order by timestamp asc) s";
+        $sql = "SELECT s.service service, s.ticket num, timestamp, MAX(s.count) count from (select ServiceID service, COUNT(*) count, MIN(TicketNumber) ticket, MIN(timestamp) timestamp from queue GROUP BY ServiceID order by timestamp asc) s";
         /*
          * query alternative
          */

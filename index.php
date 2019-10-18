@@ -96,7 +96,7 @@ $side_content = '
 if(is_clerk()){
   //TODO: implement get_clerk_sidecontent (maybe show Service currently offered and FrontOffice name)
   // and            get_clerk_content (show ticketN of current customer and update that value when click on a button)
-  //$content = get_clerk_content();
+  $content = get_clerk_content();
   $side_content = get_clerk_side_content();
 }
 // If a customer has a pending ticket just show the ticket info as content
@@ -123,7 +123,7 @@ else{
         die("Connection failed: " . $conn->connect_error);
     }
 
-    $sql = "SELECT * FROM service";
+    $sql = "SELECT * FROM Service";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {

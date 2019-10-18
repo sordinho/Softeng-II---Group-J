@@ -167,7 +167,20 @@ function user_login($post_data) {
     }
 
     function get_clerk_content(){
-        
+        //<a class="btn btn-primary" href="#" role="button">Link</a>
+        if(!is_clerk())
+            return false;
+    $content = '
+    <!-- The container  -->
+    <div class="container">
+        <div class="wrapper">
+            <br/>
+            <h1>Queue manager</h1>
+            <p class="lead">Click on the button to mark the current customer as served and generate the next customer to call<br></p>
+            <a class="btn btn-primary" href="./clerkAction.php?action=nextTicket"role="button">Next customer</a>
+        </div>
+    </div>';
+    return $content;
     }
     function get_clerk_side_content(){
         $clerk_side_content = '
