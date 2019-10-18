@@ -5,9 +5,9 @@ require_once("functions.php");
 
 if($_GET['action'] == "nextTicket" && is_clerk()){
     // 1) delete from queue
-    // TODO:
+    delete_ticket(get_serviceID());
     // 2) Increase counter for stats (Both in Service table and Authentication table)
-    // ... TODO
+    update_stats(get_serviceID());
     // 3)Get new ticket to serve
     $ticket_info = get_next(get_serviceID());
     // 4) Save in the session the new current info about ticket
