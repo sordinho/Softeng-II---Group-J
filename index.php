@@ -115,8 +115,8 @@ if (is_admin()) {
 } elseif (is_clerk()) {
     //TODO: implement get_clerk_sidecontent (maybe show Service currently offered and FrontOffice name)
     // and            get_clerk_content (show ticketN of current customer and update that value when click on a button)
-    //$content = get_clerk_content();
-    //$side_content = get_clerk_side_content();
+    $content = get_clerk_content();
+    $side_content = get_clerk_side_content();
 } // If a customer has a pending ticket just show the ticket info as content
 elseif (has_pending_ticket()) {
     $content = get_ticket_html();
