@@ -107,6 +107,30 @@ function get_next($serviceID) {
 
 }
 
+function delete_ticket($serviceID) {
+    $conn = connectMySQL();
+    $sql = "select id from Queue where TicketNumber = (select MIN(TicketNumber) from Queue where ServiceID=$serviceID) and ServiceID=$serviceID)";
+    if ($result = $conn->query($sql)) {
+        if ($result->num_rows > 0) {
+            $id = $result->fetch_assoc();
+            if ($result2 = $conn->query("delete from Queue where id=$id")) {
+                if ($result2->num_rows === 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                printf("Error message: %s\n", $conn->error);
+                return false;
+            }
+        }
+        return false;
+    } else {
+        printf("Error message: %s\n", $conn->error);
+        return false;
+    }
+}
+
 function get_currently_served_ticket_by($service_name){
     return get_bottom($service_name);
 }
