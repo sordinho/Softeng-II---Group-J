@@ -56,14 +56,43 @@ $side_content = '
     <div class="nstats">
     <div class="networks">
         <div class="network uptime">
-        <p class="title">Service</p>
-        <p class="tally">3</p>
+        <p class="title">Service</p>';
+
+  // Create connection
+    $conn = connectMySQL();
+
+    $sql = "SELECT COUNT(*) as n FROM service";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $side_content .= '<p class="tally">'. $row["n"] .'</p>';
+        $conn->close();
+    }
+
+
+    $side_content.='
+
         <p class="unit">Services</p>
         </div>
 
         <div class="network smartobject">
-        <p class="title">Waiting</p>
-        <p class="tally">35</p>
+        <p class="title">Waiting</p>';
+
+
+    $conn = connectMySQL();
+
+    $sql = "SELECT COUNT(*) as n FROM queue";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $side_content .= '<p class="tally">'. $row["n"] .'</p>';
+        $conn->close();
+    }
+
+
+    $side_content.='
         <p class="unit">in queue</p>
         </div>      
 
@@ -90,8 +119,7 @@ $side_content = '
 
     </div>
     </div>
-</section>
-';
+</section>';
 
 
 if (is_admin()) {
