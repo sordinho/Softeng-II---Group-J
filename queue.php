@@ -131,6 +131,21 @@ function delete_ticket($serviceID) {
     }
 }
 
+function update_stats($serviceID) {
+    $conn = connectMySQL();
+    $sql1 = "update Authentication set Counter=Counter+1 where ServiceID=$serviceID)";
+    $sql2 = "update Service set Counter=Counter+1 where ID=$serviceID)";
+    if ($result1 = $conn->query($sql1) && $result2 = $conn->query($sql2)) {
+        if ($result1->num_rows === 1 && $result1->num_rows === 1) {
+            return true;
+        }
+        return false;
+    } else {
+        printf("Error message: %s\n", $conn->error);
+        return false;
+    }
+}
+
 function get_currently_served_ticket_by($service_name){
     return get_bottom($service_name);
 }
