@@ -114,9 +114,27 @@ else{
           <form action="./ticketDispatcher.php?action=generateTicket" method="POST">
           <div class="form-group">
               <label for="exampleFormControlSelect2">Service</label>
-              <select name = "service" class="form-control" id="service">
-              <option value="Packages" selected>Packages</option>
-              <option value="Accounts">Accounts</option>
+              <select name = "service" class="form-control" id="service">';
+
+  // Create connection
+    $conn = new mysqli(DBAddr, DBUser, DBPassword, DBName);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $sql = "SELECT * FROM service";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // output data of each row
+        while ($row = $result->fetch_assoc()) {
+            //Adding option to the select input element based on services stored in the DB
+            $content .= "<option value=" . $row["Name"] . " >" . $row["Name"] . "</option>";
+        }
+        $conn->close();
+    }
+    $content.='
             </select>
           </div>
           <button type="submit" class="btn btn-primary">Generate a ticket</button>
