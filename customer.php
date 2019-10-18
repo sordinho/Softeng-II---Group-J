@@ -24,7 +24,7 @@ function customer_register_ticket($ticket_info){
 function customer_register_timestamp($timestamp){
     $_SESSION['timestamp'] = $timestamp;
 }
-function customer_get_timestamp($timestamp){
+function customer_get_timestamp(){
     return isset($_SESSION['timestamp']) ? $_SESSION['timestamp'] : false;
 }
 function has_pending_ticket(){
@@ -43,16 +43,27 @@ function get_ticket(){
 }
 function get_distance_from_top(){
     $ticket_info = get_ticket();
-    //TODO: Implement queue_distance_from_top
-    //qdis = queue_distance_from_top($ticket_info);
-    return qdis();
+
+    $mysqli = connectMySQL();
+    $sql = "SELECT COUNT(*) AS Distance FROM Queue WHERE ServiceID = '{$ticket_info["serviceID"]}' AND TicketNumber < '{$ticket_info["ticketN"]}'";
+    if ($result = $mysqli->query($sql)) {
+        /* fetch object array */
+        $row = $result->fetch_object();
+        $distance = $row->Distance;
+
+        $result->close();
+        return $distance;
+    } else {
+        printf("Error message: %s\n", $mysqli->error);
+    }
 }
+
 function get_ticket_html(){
     $ticket_info = get_ticket();
     $format_ticket = sprintf("%03d", $ticket_info["ticketN"]);
     $format_cur_ticket = sprintf("%03d", $ticket_info["ticketN"]-3);//TODO:
     // Test format for GUI rappresentation
-    $time = customer_get_timestamp($ticket_info); 
+    $time = customer_get_timestamp();
     $format_timestamp = strtotime($time);
     $format_date = timestamp_to_date($format_timestamp);
     $html_ticket = '
