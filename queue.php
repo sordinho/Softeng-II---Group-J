@@ -85,7 +85,7 @@ function get_next($serviceID) {
     }
     elseif ($serviceID !== -1) {
         $conn = connectMySQL();
-        $sql = "select serviceID service, min(TicketNumber) num, timestamp, count(*) count from queue where ServiceID='$serviceID'";
+        $sql = "SELECT ServiceID, TicketNumber, Timestamp FROM Queue WHERE TicketNumber IN (SELECT MIN(TicketNumber) FROM Queue WHERE ServiceID=$serviceID)";
         $ticket = array();
         if ($result = $conn->query($sql)) {
             if ($result->num_rows > 0) {
