@@ -20,7 +20,8 @@ if ($_GET['action'] == "newService") {
     echo "Service id: " .$serviceID;
 
     //Now we need to bind the new service to the selected frontOffices
+    //TODO query after discussing about DB structure
 
 
-
+    header("location: ".PLATFORM_PATH);
 }
