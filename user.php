@@ -170,7 +170,25 @@ function user_login($post_data) {
         
     }
     function get_clerk_side_content(){
+        $clerk_side_content = '
+            
+            <section class="component-nstats">
+                <div class="nstats">
+                    <div class="networks">
+                        <div class="network uptime">
+                            <p class="title">Front office no.</p>
+                            <p class="tally">'.$_SESSION['serviceID'].'</p>
+                            <p class="unit">Packages / Accounts</p>
+                        </div>
+
         
+                    </div>
+
+
+                </div>
+</section>
+        ';
+        return $clerk_side_content;
     }
 
     // Check functions

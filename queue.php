@@ -84,7 +84,24 @@ function get_next($serviceID) {
         return $ticket;
     }
     elseif ($serviceID !== -1) {
-        // todo
+        $conn = connectMySQL();
+        $sql = "select serviceID service, min(TicketNumber) num, timestamp, count(*) count from queue where ServiceID='$serviceID'";
+        $ticket = array();
+        if ($result = $conn->query($sql)) {
+            if ($result->num_rows > 0) {
+                $ticket = $result->fetch_assoc();
+            }
+        } else {
+            printf("Error message: %s\n", $conn->error);
+        }
+
+        /*
+         * $ticket['num'] -> ticket number
+         * $ticket['service'] -> serviceID
+         * $ticket['count'] -> total number of people in serviceID queue
+         * $ticket['timestamp'] -> timestamp of the ticket
+         */
+        return $ticket;
     }
 
 
