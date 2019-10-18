@@ -188,6 +188,7 @@ function user_login($post_data) {
                 </div>
 </section>
         ';
+        
         return $clerk_side_content;
     }
 
