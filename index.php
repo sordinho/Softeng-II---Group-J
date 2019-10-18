@@ -95,8 +95,6 @@ $side_content = '
 
 
 if (is_admin()) {
-    $conn = connectMySQL();
-    $queryGetCounters = "SELECT FrontOffice FROM Authentication WHERE Permission='Clerk'";
     $content = '
       <!-- The container  -->
       <div class="container">
@@ -107,26 +105,13 @@ if (is_admin()) {
           <form action="./admin.php?action=newService" method="POST">
           <div class="form-group">
               <label for="exampleFormControlSelect2">New Service</label>
-              <input name="newService" class="form-control" id="newSerice">
-              <label >Select Counter to which assign the new Service</label>.
-           ';
-    if ($result = $conn->query($queryGetCounters)) {
-        while ($row = $result->fetch_object()) {
-
-            $content .= '<div class="form-check">
-                <input class="form-check-input" type="checkbox" name="frontOffice[]" value="' . $row->FrontOffice . '" id="'.$row->FrontOffice.'">
-                <label class="form-check-label" for="'.$row->FrontOffice.'">' . $row->FrontOffice . '</label>
-                </div>';
-        }
-        $result->close();
-    }
-    $content .= '
+              <input name="newService" class="form-control" id="newService">                         
           </div>
           <button type="submit" class="btn btn-primary">Register</button>
         </form>
       </div>
-      </div>
-';
+      </div>';
+
 } elseif (is_clerk()) {
     //TODO: implement get_clerk_sidecontent (maybe show Service currently offered and FrontOffice name)
     // and            get_clerk_content (show ticketN of current customer and update that value when click on a button)

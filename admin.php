@@ -2,8 +2,10 @@
 require_once('config.php');
 require_once('functions.php');
 
-if ($_GET['action'] == "newService") {
-    echo "<pre>".print_r($_POST,TRUE)."</pre>";
+
+// Register a new service into the DB
+if ($_GET['action'] == "newService" && isset($_POST['newService'])) {
+//    echo "<pre>".print_r($_POST,TRUE)."</pre>";
 
     $newServiceToAdd = $_POST["newService"];
 
@@ -12,16 +14,20 @@ if ($_GET['action'] == "newService") {
     // Query for adding new service to service table
     $addService = "INSERT INTO Service(Name,Counter) VALUES (?,0)";
     $query = $conn->prepare($addService);
-    $query ->bind_param('s', $newServiceToAdd);
+    $query->bind_param('s', $newServiceToAdd);
     $res = $query->execute();
 
-    $serviceID = $conn->insert_id;
+    if ($res) {
+        $content = '
+    <div class="alert alert-success" role="alert">
+        Succesfully registered a new service!<br>In a few seconds you will be redirected to home. If you are in a hurry <a href="./index.php" class="alert-link">just click here!</a>
+    </div> ';
+    } else
+        $content = '
+    <div class="alert alert-warning" role="alert">
+        Error!!! Impossible to register the new service<br>In a few seconds you will be redirected to home. If you are in a hurry <a href="./index.php" class="alert-link">just click here!</a>
+    </div> ';
 
-    echo "Service id: " .$serviceID;
-
-    //Now we need to bind the new service to the selected frontOffices
-    //TODO query after discussing about DB structure
-
-
-    header("location: ".PLATFORM_PATH);
+    $content .= "<meta http-equiv='refresh' content='3; url=" . PLATFORM_PATH . "' />";
+    render_page($content, '');
 }
