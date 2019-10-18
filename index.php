@@ -114,7 +114,7 @@ if (is_admin()) {
         while ($row = $result->fetch_object()) {
 
             $content .= '<div class="form-check">
-                <input class="form-check-input" type="checkbox" value="' . $row->FrontOffice . '" id="'.$row->FrontOffice.'">
+                <input class="form-check-input" type="checkbox" name="frontOffice[]" value="' . $row->FrontOffice . '" id="'.$row->FrontOffice.'">
                 <label class="form-check-label" for="'.$row->FrontOffice.'">' . $row->FrontOffice . '</label>
                 </div>';
         }
