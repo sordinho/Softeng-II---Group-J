@@ -77,7 +77,7 @@ function get_next($serviceID) {
          * get the minimum numbered ticket from a given serviceID queue
          */
         $conn = connectMySQL();
-        $sql = "select ID, ServiceID, TicketNumber ticketN, Timestamp timestamp from Queue where TicketNumber = (select MIN(TicketNumber) from Queue) and ServiceID=$serviceID";
+        $sql = "select ID, ServiceID, TicketNumber ticketN, Timestamp timestamp from Queue where TicketNumber = (select MIN(TicketNumber) from Queue) and ServiceID='$serviceID'";
         $ticket_info = array();
         if ($result = $conn->query($sql)) {
             if ($result->num_rows === 1) {
@@ -99,11 +99,11 @@ function delete_ticket($serviceID) {
      * false instead
      */
     $conn = connectMySQL();
-    $sql = "select id from Queue where TicketNumber = (select MIN(TicketNumber) from Queue where ServiceID=$serviceID) and ServiceID=$serviceID)";
+    $sql = "select id from Queue where TicketNumber = (select MIN(TicketNumber) from Queue where ServiceID='$serviceID') and ServiceID='$serviceID'";
     if ($result = $conn->query($sql)) {
         if ($result->num_rows > 0) {
             $id = $result->fetch_assoc();
-            if ($result2 = $conn->query("delete from Queue where id=$id")) {
+            if ($result2 = $conn->query("delete from Queue where id='$id'")) {
                 if ($result2->num_rows === 1) {
                     return true;
                 } else {
@@ -128,8 +128,8 @@ function update_stats($serviceID) {
      * false instead
      */
     $conn = connectMySQL();
-    $sql1 = "update Authentication set Counter=Counter+1 where ServiceID=$serviceID)";
-    $sql2 = "update Service set Counter=Counter+1 where ID=$serviceID)";
+    $sql1 = "update Authentication set Counter=Counter+1 where ServiceID='$serviceID'";
+    $sql2 = "update Service set Counter=Counter+1 where ID='$serviceID'";
     if ($result1 = $conn->query($sql1) && $result2 = $conn->query($sql2)) {
         if ($result1->num_rows === 1 && $result1->num_rows === 1) {
             return true;
