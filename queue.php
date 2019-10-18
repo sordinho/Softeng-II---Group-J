@@ -104,11 +104,7 @@ function delete_ticket($serviceID) {
         if ($result->num_rows > 0) {
             $id = $result->fetch_assoc();
             if ($result2 = $conn->query("delete from Queue where id='$id'")) {
-                if ($result2->num_rows === 1) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return ($result2->num_rows === 1);
             } else {
                 printf("Error message: %s\n", $conn->error);
                 return false;
@@ -131,10 +127,7 @@ function update_stats($serviceID) {
     $sql1 = "update Authentication set Counter=Counter+1 where ServiceID='$serviceID'";
     $sql2 = "update Service set Counter=Counter+1 where ID='$serviceID'";
     if ($result1 = $conn->query($sql1) && $result2 = $conn->query($sql2)) {
-        if ($result1->num_rows === 1 && $result1->num_rows === 1) {
-            return true;
-        }
-        return false;
+        return ($result1->num_rows === 1 && $result1->num_rows === 1);
     } else {
         printf("Error message: %s\n", $conn->error);
         return false;
