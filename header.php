@@ -9,7 +9,7 @@ if(!is_logged()) {
 
 }
 else{
-    $navbar_edit = '<li class="nav-item"><a class="nav-link" href="'.PLATFORM_PATH.'/logout.php"> Logout </a></li>';
+    $navbar_edit = '<li class="nav-item"><a class="nav-link" href="'.PLATFORM_PATH.'logout.php"> Logout </a></li>';
 }
 if(is_admin()){
 	$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#registerModal"> Register new clerk</a></li>';
