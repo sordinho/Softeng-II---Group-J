@@ -43,10 +43,21 @@ function get_ticket(){
 }
 function get_distance_from_top(){
     $ticket_info = get_ticket();
-    //TODO: Implement queue_distance_from_top
-    //qdis = queue_distance_from_top($ticket_info);
-    return qdis();
+
+    $mysqli = connectMySQL();
+    $sql = "SELECT COUNT(*) AS Distance FROM Queue WHERE ServiceID = '{$ticket_info["serviceID"]}' AND TicketNumber < '{$ticket_info["ticketN"]}'";
+    if ($result = $mysqli->query($sql)) {
+        /* fetch object array */
+        $row = $result->fetch_object();
+        $distance = $row->Distance;
+
+        $result->close();
+        return $distance;
+    } else {
+        printf("Error message: %s\n", $mysqli->error);
+    }
 }
+
 function get_ticket_html(){
     $ticket_info = get_ticket();
     $format_ticket = sprintf("%03d", $ticket_info["ticketN"]);
