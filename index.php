@@ -59,11 +59,7 @@ $side_content = '
         <p class="title">Service</p>';
 
   // Create connection
-    $conn = new mysqli(DBAddr, DBUser, DBPassword, DBName);
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+    $conn = connectMySQL();
 
     $sql = "SELECT COUNT(*) as n FROM service";
     $result = $conn->query($sql);
@@ -83,12 +79,8 @@ $side_content = '
         <div class="network smartobject">
         <p class="title">Waiting</p>';
 
-  // Create connection
-    $conn = new mysqli(DBAddr, DBUser, DBPassword, DBName);
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+
+    $conn = connectMySQL();
 
     $sql = "SELECT COUNT(*) as n FROM queue";
     $result = $conn->query($sql);
