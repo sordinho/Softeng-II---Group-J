@@ -1,0 +1,141 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700");
+body {
+  background-color: #f4f7ff;
+}
+
+
+
+.ticketContainer {
+  background-color: #fff;
+  font-family: 'Roboto Mono', monospace;
+  width: 296px;
+  height: 422px;
+  position: absolute;
+  top: 300px;
+  left: 50%;
+  border-radius: 8px;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  box-shadow: 0px 0px 10px 2px #dee5f4;
+  color: #3c4454;
+  z-index: 9999999;
+}
+
+.ticketContainer h1 {
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+  height: 48px;
+  background: #4985ff;
+  font-size: 15.5px;
+  text-align: center;
+  line-height: 3.2;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 3.5px;
+  margin-block-start: 0%;
+}
+
+.ticketContainer ul {
+  padding: 16px 24px 26px 24px;
+  height: calc(100% - 48px);
+  list-style-type: none;
+  z-index: 999;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(5, 1fr);
+}
+
+.ticketContainer li {
+  position: relative;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+li.f_row {
+  font-weight: 500;
+  font-size: 44px;
+  letter-spacing: 9px;
+  padding-bottom: 1px;
+}
+li.f_row .arrow {
+  height: 20px;
+  width: 30px;
+  color: #989da6;
+  opacity: .3;
+}
+li.f_row .san:after, li.f_row .ticketNum:after {
+  bottom: -10px;
+  position: absolute;
+  content: attr(data);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .2px;
+  color: #989da6;
+}
+li.f_row .san:after {
+  right: 0;
+}
+li.f_row .ticketNum:after {
+  left: 0;
+}
+li.f_row .san {
+  width: 96px;
+}
+
+li.t_row {
+  overflow: visible;
+  margin-top: 40px;
+}
+li.t_row .date, li.t_row .boarding {
+  position: relative;
+}
+li.t_row .date:after, li.t_row .boarding:after {
+  top: -27px;
+  position: absolute;
+  content: attr(data);
+  font-weight: 500;
+  letter-spacing: .2px;
+  font-size: 13px;
+}
+li.t_row .date:after {
+  left: 0;
+}
+li.t_row .boarding:after {
+  right: 0;
+}
+
+li.fo_row {
+  margin-top: 34px;
+  text-transform: uppercase;
+}
+li.fo_row .passenger {
+  position: relative;
+}
+li.fo_row .passenger:after {
+  text-transform: none;
+  top: -28px;
+  left: 0;
+  position: absolute;
+  content: attr(data);
+  font-weight: 500;
+  letter-spacing: .2px;
+  font-size: 13px;
+}
+
+li.fi_row {
+  overflow: hidden;
+  align-self: end;
+  height: 45px;
+  width: 100%;
+}
+li.fi_row svg.barcode {
+  margin-right: 3px;
+  fill: #3c4454;
+  height: 200%;
+  width: 100%;
+}

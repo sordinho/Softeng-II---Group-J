@@ -2,6 +2,8 @@
 require_once('config.php');
 require_once('functions.php');
 require_once('user.php');
+require_once('customer.php');
+
 
 # Define the content of the page
 $content = <<< EOT
@@ -9,9 +11,8 @@ $content = <<< EOT
       <div class="container">
         <div class="wrapper">
           <br/>
-          <h1>Starter template</h1>
-          <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-          Test
+          <h1>Queue manager</h1>
+          <p class="lead">Test<br></p>
         </div>
       </div>
 EOT;
@@ -48,7 +49,7 @@ if(!isset($_SESSION['front_office']) && isset($_POST['front_office'])) {
       </div> ';
       $content .= "<meta http-equiv='refresh' content='3; url=".PLATFORM_PATH."' />"; 
   }
-}
+} 
 
 $side_content = '
 <section class="component-nstats">
@@ -97,6 +98,50 @@ if(is_clerk()){
   // and            get_clerk_content (show ticketN of current customer and update that value when click on a button)
   //$content = get_clerk_content();
   //$side_content = get_clerk_side_content(); 
+}
+// If a customer has a pending ticket just show the ticket info as content
+elseif(has_pending_ticket()){
+  $content = get_ticket_html();
+}
+else{
+  $content = '
+      <!-- The container  -->
+      <div class="container">
+        <div class="wrapper">
+          <br/>
+          <h1>Do you need a ticket?</h1>
+          <p class="lead">If you are a customer you can click the button below to generate a new ticket.<br></p>
+          <form action="./ticketDispatcher.php?action=generateTicket" method="POST">
+          <div class="form-group">
+              <label for="exampleFormControlSelect2">Service</label>
+              <select name = "service" class="form-control" id="service">';
+
+  // Create connection
+    $conn = new mysqli(DBAddr, DBUser, DBPassword, DBName);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $sql = "SELECT * FROM service";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // output data of each row
+        while ($row = $result->fetch_assoc()) {
+            //Adding option to the select input element based on services stored in the DB
+            $content .= "<option value=" . $row["Name"] . " >" . $row["Name"] . "</option>";
+        }
+        $conn->close();
+    }
+    $content.='
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Generate a ticket</button>
+        </form>
+      </div>
+      </div>
+';
 }
 // Finally render the full page: 1)centered (main) content and 2)the side one (on the right)
 render_page($content, $side_content);

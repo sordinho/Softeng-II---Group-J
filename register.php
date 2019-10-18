@@ -22,8 +22,8 @@ EOT;
 		get_error(1);	
     }
     // Check the user is not currently logged
-    elseif(is_logged()){
-        get_error(2);
+    elseif(!is_admin()){
+        get_error(3);
     }
     // Eventually add a check for password strength
     else {

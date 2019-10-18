@@ -29,7 +29,7 @@ function get_error($nerr){
     $messages = array(
         1 => 'Insert all the fields.',
         2 => 'Already logged in.',
-        3 => '',
+        3 => 'You cant do such operation (missing permission).',
         4 => '.',
         5 => '.'
     );
@@ -53,4 +53,10 @@ function connectMySQL() {
     return $mysqli;
 }
 
+function timestamp_to_date($timestamp){
+    $date['month'] = date("M", $timestamp);
+    $date['day']= date("d", $timestamp);
+    $date['time'] = date("H:i", $timestamp);
+    return $date;
+}
 ?>
