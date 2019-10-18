@@ -61,7 +61,7 @@ function get_next($serviceID) {
          * with the minimum timestamp i.e. higher waiting time
          */
         $conn = connectMySQL();
-        $sql = "select s.service service, s.ticket num, timestamp, MAX(s.count) count from (select ServiceID service, COUNT(*) count, MIN(TicketNumber) ticket, MIN(timestamp) timestamp from queue GROUP BY ServiceID order by timestamp asc) s";
+        $sql = "SELECT s.service service, s.ticket num, timestamp, MAX(s.count) count from (select ServiceID service, COUNT(*) count, MIN(TicketNumber) ticket, MIN(timestamp) timestamp from queue GROUP BY ServiceID order by timestamp asc) s";
         /*
          * query alternative
          */
@@ -84,10 +84,31 @@ function get_next($serviceID) {
         return $ticket;
     }
     elseif ($serviceID !== -1) {
-        // todo
+        $conn = connectMySQL();
+        $sql = "SELECT ServiceID, TicketNumber, Timestamp FROM Queue WHERE TicketNumber IN (SELECT MIN(TicketNumber) FROM Queue WHERE ServiceID=$serviceID)";
+        $ticket = array();
+        if ($result = $conn->query($sql)) {
+            if ($result->num_rows > 0) {
+                $ticket = $result->fetch_assoc();
+            }
+        } else {
+            printf("Error message: %s\n", $conn->error);
+        }
+
+        /*
+         * $ticket['num'] -> ticket number
+         * $ticket['service'] -> serviceID
+         * $ticket['count'] -> total number of people in serviceID queue
+         * $ticket['timestamp'] -> timestamp of the ticket
+         */
+        return $ticket;
     }
 
 
+}
+
+function get_currently_served_ticket_by($service_name){
+    return get_bottom($service_name);
 }
 
 ?>

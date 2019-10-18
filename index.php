@@ -140,7 +140,7 @@ elseif (has_pending_ticket()) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    $sql = "SELECT * FROM service";
+    $sql = "SELECT * FROM Service";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
