@@ -95,22 +95,8 @@ $side_content = '
 
 
 if (is_admin()) {
-    $content = '
-      <!-- The container  -->
-      <div class="container">
-        <div class="wrapper">
-          <br/>
-          <h1>Register a new service</h1>
-          <p class="lead">Insert the name and select to wich counter assign it.<br></p>
-          <form action="./admin.php?action=newService" method="POST">
-          <div class="form-group">
-              <label for="exampleFormControlSelect2">New Service</label>
-              <input name="newService" class="form-control" id="newService">                         
-          </div>
-          <button type="submit" class="btn btn-primary">Register</button>
-        </form>
-      </div>
-      </div>';
+    $content = get_admin_content();
+    $side_content = get_admin_side_content();
 
 } elseif (is_clerk()) {
     //TODO: implement get_clerk_sidecontent (maybe show Service currently offered and FrontOffice name)
