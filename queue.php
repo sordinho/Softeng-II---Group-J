@@ -61,50 +61,84 @@ function get_next($serviceID) {
          * with the minimum timestamp i.e. higher waiting time
          */
         $conn = connectMySQL();
-        $sql = "SELECT s.service service, s.ticket num, timestamp, MAX(s.count) count from (select ServiceID service, COUNT(*) count, MIN(TicketNumber) ticket, MIN(timestamp) timestamp from queue GROUP BY ServiceID order by timestamp asc) s";
-        /*
-         * query alternative
-         */
-        // $sql = "select s.service service, s.ticket num, timestamp, MAX(s.count) count from (select ServiceID service, COUNT(*) count, MIN(TicketNumber) ticket from queue GROUP BY ServiceID) s where timestamp = (select min(timestamp) from queue)";
-        $ticket = array();
+        $sql = "select ID, ServiceID, TicketNumber ticketN, Timestamp timestamp from Queue where TicketNumber in (select MIN(TicketNumber) from Queue group by ServiceID) group by id, ServiceID, TicketNumber, Timestamp order by Timestamp limit 1";
+        $ticket_info = array();
         if ($result = $conn->query($sql)) {
-            if ($result->num_rows > 0) {
-                $ticket = $result->fetch_assoc();
+            if ($result->num_rows === 1) {
+                $ticket_info = $result->fetch_assoc();
             }
         } else {
             printf("Error message: %s\n", $conn->error);
         }
-
-        /*
-         * $ticket['num'] -> ticket number
-         * $ticket['service'] -> serviceID
-         * $ticket['count'] -> total number of people in serviceID queue
-         * $ticket['timestamp'] -> timestamp of the ticket
-         */
-        return $ticket;
+        return $ticket_info;
     }
     elseif ($serviceID !== -1) {
+        /*
+         * get the minimum numbered ticket from a given serviceID queue
+         */
         $conn = connectMySQL();
-        $sql = "SELECT ServiceID, TicketNumber, Timestamp FROM Queue WHERE TicketNumber IN (SELECT MIN(TicketNumber) FROM Queue WHERE ServiceID=$serviceID)";
-        $ticket = array();
+        $sql = "select ID, ServiceID, TicketNumber ticketN, Timestamp timestamp from Queue where TicketNumber = (select MIN(TicketNumber) from Queue) and ServiceID=$serviceID";
+        $ticket_info = array();
         if ($result = $conn->query($sql)) {
-            if ($result->num_rows > 0) {
-                $ticket = $result->fetch_assoc();
+            if ($result->num_rows === 1) {
+                $ticket_info = $result->fetch_assoc();
             }
         } else {
             printf("Error message: %s\n", $conn->error);
         }
-
-        /*
-         * $ticket['num'] -> ticket number
-         * $ticket['service'] -> serviceID
-         * $ticket['count'] -> total number of people in serviceID queue
-         * $ticket['timestamp'] -> timestamp of the ticket
-         */
-        return $ticket;
+        return $ticket_info;
     }
 
 
+}
+
+function delete_ticket($serviceID) {
+    /*
+     * delete one ticket from the specified serviceID
+     * if one row has been affected returns true
+     * false instead
+     */
+    $conn = connectMySQL();
+    $sql = "select id from Queue where TicketNumber = (select MIN(TicketNumber) from Queue where ServiceID=$serviceID) and ServiceID=$serviceID)";
+    if ($result = $conn->query($sql)) {
+        if ($result->num_rows > 0) {
+            $id = $result->fetch_assoc();
+            if ($result2 = $conn->query("delete from Queue where id=$id")) {
+                if ($result2->num_rows === 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                printf("Error message: %s\n", $conn->error);
+                return false;
+            }
+        }
+        return false;
+    } else {
+        printf("Error message: %s\n", $conn->error);
+        return false;
+    }
+}
+
+function update_stats($serviceID) {
+    /*
+     * update both Authentication and Service table
+     * return true if affected rows are equal to 1
+     * false instead
+     */
+    $conn = connectMySQL();
+    $sql1 = "update Authentication set Counter=Counter+1 where ServiceID=$serviceID)";
+    $sql2 = "update Service set Counter=Counter+1 where ID=$serviceID)";
+    if ($result1 = $conn->query($sql1) && $result2 = $conn->query($sql2)) {
+        if ($result1->num_rows === 1 && $result1->num_rows === 1) {
+            return true;
+        }
+        return false;
+    } else {
+        printf("Error message: %s\n", $conn->error);
+        return false;
+    }
 }
 
 function get_currently_served_ticket_by($service_name){
