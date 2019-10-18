@@ -74,8 +74,13 @@ function user_login($post_data)
     set_usergroup($userinfo['usergroup']);
     set_name($userinfo['front_office']);             // todo controllare questa riga, era: set_name($userinfo['name']); ----- ma name non esiste
     set_front_office($userinfo['front_office']);
-    if ($userinfo["serviceID"] != -1)// admin has a -1 value on serviceID field
+    if ($userinfo["serviceID"] != -1){// admin has a -1 value on serviceID field
+        // Get also the first ticket that need to be served
+        $ticket_info = get_bottom_ticket_by_id($userinfo["serviceID"]);
+        clerk_register_ticket($ticket_info);
         set_serviceID($userinfo["serviceID"]);
+        //print_r(clerk_get_cur_ticket());
+    }
     return $success;
 }
 
@@ -186,6 +191,22 @@ function get_serviceID()
 function get_usergroup()
 {
     return isset($_SESSION['usergroup']) ? $_SESSION['usergroup'] : '';
+}
+
+function clerk_register_ticket($ticket_info){
+    
+    $_SESSION['ticketN'] = $ticket_info["ticketN"];
+    //$_SESSION['service'] = $ticket_info["service"];
+    $_SESSION['serviceID'] = $ticket_info["serviceID"];
+    $_SESSION['timestamp'] = $ticket_info["timestamp"];
+}
+
+function clerk_get_cur_ticket(){
+    $ticket_info["ticketN"] = $_SESSION['ticketN'];
+    //$ticket_info["service"] = $_SESSION['service'];
+    $ticket_info["serviceID"] = $_SESSION['serviceID'];
+    $ticket_info["timestamp"] = $_SESSION['timestamp'];
+    return $ticket_info;
 }
 
 function get_clerk_content()

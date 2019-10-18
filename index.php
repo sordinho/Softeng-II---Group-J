@@ -66,8 +66,7 @@ if (is_admin()) {
     $side_content = get_clerk_side_content();
 } // If a customer has a pending ticket just show the ticket info as content
 elseif (has_pending_ticket()) {
-    $content = '<meta http-equiv="refresh" content="8">';
-    $content .= get_ticket_html();
+    $content = get_ticket_html();
 } else {
     $service_list = get_services_as_list_html();
     $content = '

@@ -18,13 +18,14 @@ Note that, when a ticket is generated and so an INSERT in the Queue table is don
 // Customer ticket handler
 function customer_register_ticket($ticket_info){
     $condition = !isset($ticket_info['ticketN']) || !isset($ticket_info['service'])
-                  || !isset($ticket_info['serviceID']) || !is_numeric($ticket_info['ticketN'])
-                  || !is_numeric($ticket_info['serviceID']);
+                || !isset($ticket_info['serviceID']) || !is_numeric($ticket_info['ticketN'])
+                || !is_numeric($ticket_info['serviceID']);
     if($condition)
         return false;
     $_SESSION['ticketN'] = $ticket_info["ticketN"];
     $_SESSION['service'] = $ticket_info["service"];
     $_SESSION['serviceID'] = $ticket_info["serviceID"];
+    $_SESSION['pendingTicket'] = true;
 }
 function customer_register_timestamp($timestamp){
     $_SESSION['timestamp'] = $timestamp;
@@ -34,7 +35,7 @@ function customer_get_timestamp(){
 }
 function has_pending_ticket(){
     //return true;//TODO: remove or comment after testing
-    return isset($_SESSION['ticketN']) ? $_SESSION['ticketN'] : false;
+    return isset($_SESSION['pendingTicket']) ? $_SESSION['pendingTicket'] : false;
 }
 
 function get_ticketn(){
@@ -100,7 +101,20 @@ function get_ticket_html(){
         </li>
     </ul>
     </div>';
-    return $html_ticket;
+    $metarefresh = '<meta http-equiv="refresh" content="8">';
+
+    if($cur_ticket > $ticket_info["ticketN"]){// The user was already served, delete all and reset his ticket
+        session_unset();
+        session_destroy();
+        setcookie(session_name(), '', time()-42000, '/');
+    }
+    elseif($cur_ticket == $ticket_info["ticketN"]){
+        $metarefresh .= '<div class="alert alert-success" role="alert">
+        It\'s your turn!<br>
+    </div> ';
+        
+    }
+    return $metarefresh.$html_ticket;
 }
 
 ?>

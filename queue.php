@@ -51,6 +51,20 @@ function get_bottom($service_name){
             printf("Error message: %s\n", $conn->error);
         }
 }
+function get_bottom_ticket_by_id($service_id){
+    $conn = connectMySQL(); 
+    $service_id = intval($service_id);
+    $sql = "SELECT ID, ServiceID, TicketNumber AS ticketN, Timestamp AS timestamp FROM Queue WHERE TicketNumber IN (select MIN(TicketNumber) FROM Queue WHERE ServiceID=$service_id) AND ServiceID=$service_id";
+    $ticket_info = array();
+    if ($result = $conn->query($sql)) {
+        if ($result->num_rows === 1) {
+            $ticket_info = $result->fetch_assoc();
+        }
+    } else {
+        printf("Error message: %s\n", $conn->error);
+    }
+    return $ticket_info; 
+}
 
 function get_next($serviceID) {
 
@@ -61,7 +75,7 @@ function get_next($serviceID) {
          * with the minimum timestamp i.e. higher waiting time
          */
         $conn = connectMySQL();
-        $sql = "select ID, ServiceID, TicketNumber ticketN, Timestamp timestamp from Queue where TicketNumber in (select MIN(TicketNumber) from Queue group by ServiceID) group by id, ServiceID, TicketNumber, Timestamp order by Timestamp limit 1";
+        $sql = "select ID, ServiceID as serviceID, TicketNumber ticketN, Timestamp timestamp from Queue where TicketNumber IN (select MIN(TicketNumber) from Queue group by ServiceID) group by id, ServiceID, TicketNumber, Timestamp order by Timestamp limit 1";
         $ticket_info = array();
         if ($result = $conn->query($sql)) {
             if ($result->num_rows === 1) {
@@ -72,12 +86,12 @@ function get_next($serviceID) {
         }
         return $ticket_info;
     }
-    elseif ($serviceID !== -1) {
+    elseif ($serviceID != -1) {
         /*
          * get the minimum numbered ticket from a given serviceID queue
          */
         $conn = connectMySQL();
-        $sql = "select ID, ServiceID, TicketNumber ticketN, Timestamp timestamp from Queue where TicketNumber = (select MIN(TicketNumber) from Queue) and ServiceID='$serviceID'";
+        $sql = "SELECT ID, ServiceID AS serviceID, TicketNumber ticketN, Timestamp AS timestamp from Queue where TicketNumber IN (SELECT MIN(TicketNumber) FROM Queue WHERE ServiceID=".$serviceID.") AND ServiceID=".$serviceID.";";
         $ticket_info = array();
         if ($result = $conn->query($sql)) {
             if ($result->num_rows === 1) {
@@ -85,10 +99,11 @@ function get_next($serviceID) {
             }
         } else {
             printf("Error message: %s\n", $conn->error);
+            print("\n".$serviceID);
+            die($sql);
         }
         return $ticket_info;
     }
-
 
 }
 
