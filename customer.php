@@ -17,6 +17,11 @@ Note that, when a ticket is generated and so an INSERT in the Queue table is don
 /* This files conains all the functions regardings to customer (active and passive) action */
 // Customer ticket handler
 function customer_register_ticket($ticket_info){
+    $condition = !isset($ticket_info['ticketN']) || !isset($ticket_info['service'])
+                  || !isset($ticket_info['serviceID']) || !is_numeric($ticket_info['ticketN'])
+                  || !is_numeric($ticket_info['serviceID']);
+    if($condition)
+        return false;
     $_SESSION['ticketN'] = $ticket_info["ticketN"];
     $_SESSION['service'] = $ticket_info["service"];
     $_SESSION['serviceID'] = $ticket_info["serviceID"];
@@ -33,6 +38,8 @@ function has_pending_ticket(){
 }
 
 function get_ticketn(){
+    if(!isset($_SESSION['ticketN']))
+        return false;
     return $_SESSION['ticketN'];
 }
 function get_ticket(){
