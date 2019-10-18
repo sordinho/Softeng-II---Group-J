@@ -91,7 +91,7 @@ echo '<!-- Modal Login -->
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-body" style="padding:40px 50px;">
-						<form role="form" method="POST" action="'.PLATFORM_PATH.'/index.php">
+						<form role="form" method="POST" action="'.PLATFORM_PATH.'index.php">
 						<div class="form-group">
 							<label for="front_office"><span class="glyphicon glyphicon-user"></span> front_office</label>
 							<input type="text" class="form-control" name="front_office" id="front_office" placeholder="Enter front_office">
