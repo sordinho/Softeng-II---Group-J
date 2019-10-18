@@ -59,4 +59,28 @@ function timestamp_to_date($timestamp){
     $date['time'] = date("H:i", $timestamp);
     return $date;
 }
+
+function get_services_as_list_html(){
+    $content = "";
+    $conn = connectMySQL();
+    $sql = "SELECT * FROM Service";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        // output data of each row
+        while ($row = $result->fetch_assoc()) {
+            //Adding option to the select input element based on services stored in the DB
+            $content .= '<option value="' . $row["Name"] . '">' . $row["Name"] . '</option>';
+        }
+        $conn->close();
+    }
+    else{
+        $content .= '<option value="Error">No current service were found</option>';
+    }
+    return $content;
+}
+
+// Should return the number of the actual service (count su tabella services)
+function get_service_num(){
+
+}
 ?>
