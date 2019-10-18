@@ -107,4 +107,8 @@ function get_next($serviceID) {
 
 }
 
+function get_currently_served_ticket_by($service_name){
+    return get_bottom($service_name);
+}
+
 ?>

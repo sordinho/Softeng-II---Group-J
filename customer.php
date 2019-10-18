@@ -61,7 +61,7 @@ function get_distance_from_top(){
 function get_ticket_html(){
     $ticket_info = get_ticket();
     $format_ticket = sprintf("%03d", $ticket_info["ticketN"]);
-    $format_cur_ticket = sprintf("%03d", $ticket_info["ticketN"]-3);//TODO:
+    $format_cur_ticket = sprintf("%03d", get_currently_served_ticket_by($ticket_info["service"]));
     // Test format for GUI rappresentation
     $time = customer_get_timestamp();
     $format_timestamp = strtotime($time);
