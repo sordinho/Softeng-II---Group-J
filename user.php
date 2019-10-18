@@ -72,7 +72,7 @@ function user_login($post_data)
     // TODO check
     $userinfo = get_user_data($front_office);
     set_usergroup($userinfo['usergroup']);
-    set_name($userinfo['name']);
+    set_name($userinfo['front_office']);             // todo controllare questa riga, era: set_name($userinfo['name']); ----- ma name non esiste
     set_front_office($userinfo['front_office']);
     if ($userinfo["serviceID"] != -1)// admin has a -1 value on serviceID field
         set_serviceID($userinfo["serviceID"]);
