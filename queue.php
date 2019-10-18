@@ -108,6 +108,11 @@ function get_next($serviceID) {
 }
 
 function delete_ticket($serviceID) {
+    /*
+     * delete one ticket from the specified serviceID
+     * if one row has been affected returns true
+     * false instead
+     */
     $conn = connectMySQL();
     $sql = "select id from Queue where TicketNumber = (select MIN(TicketNumber) from Queue where ServiceID=$serviceID) and ServiceID=$serviceID)";
     if ($result = $conn->query($sql)) {
@@ -132,6 +137,11 @@ function delete_ticket($serviceID) {
 }
 
 function update_stats($serviceID) {
+    /*
+     * update both Authentication and Service table
+     * return true if affected rows are equal to 1
+     * false instead
+     */
     $conn = connectMySQL();
     $sql1 = "update Authentication set Counter=Counter+1 where ServiceID=$serviceID)";
     $sql2 = "update Service set Counter=Counter+1 where ID=$serviceID)";
