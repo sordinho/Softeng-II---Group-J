@@ -137,6 +137,7 @@ if (is_admin()) {
 elseif (has_pending_ticket()) {
     $content = get_ticket_html();
 } else {
+    $service_list = get_services_as_list_html();
     $content = '
       <!-- The container  -->
       <div class="container">
@@ -146,33 +147,13 @@ elseif (has_pending_ticket()) {
           <p class="lead">If you are a customer you can click the button below to generate a new ticket.<br></p>
           <form action="./ticketDispatcher.php?action=generateTicket" method="POST">
           <div class="form-group">
-              <label for="exampleFormControlSelect2">Service</label>
-              <select name = "service" class="form-control" id="service">';
-
-  // Create connection
-    $conn = new mysqli(DBAddr, DBUser, DBPassword, DBName);
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    $sql = "SELECT * FROM Service";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        // output data of each row
-        while ($row = $result->fetch_assoc()) {
-            //Adding option to the select input element based on services stored in the DB
-            $content .= '<option value="' . $row["Name"] . '">' . $row["Name"] . '</option>';
-        }
-        $conn->close();
-    }
-    $content.='
+            <label for="exampleFormControlSelect2">Service</label>
+            <select name = "service" class="form-control" id="service">'.$service_list.'
             </select>
           </div>
           <button type="submit" class="btn btn-primary">Generate a ticket</button>
-        </form>
-      </div>
+          </form>
+        </div>
       </div>
 ';
 }
