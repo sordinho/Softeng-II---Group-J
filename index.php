@@ -20,7 +20,7 @@ EOT;
 # Define the logic
 # If user not authenticated and a post requested with front_office was sent => try login
 if (!isset($_SESSION['front_office']) && isset($_POST['front_office'])) {
-    echo "Trying to login... wait";
+    //echo "Trying to login... wait";
 
     if (user_login($_POST)) {
         // If login was successful then get info about user and redirect according to the role
@@ -49,6 +49,8 @@ if (!isset($_SESSION['front_office']) && isset($_POST['front_office'])) {
       </div> ';
         $content .= "<meta http-equiv='refresh' content='3; url=" . PLATFORM_PATH . "' />";
     }
+    render_page($content, "");
+    die();
 }
 
 $side_content = '
