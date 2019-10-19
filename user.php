@@ -163,6 +163,8 @@ function is_clerk()
 // set login
 function set_logged($front_office)
 {
+    if(!isset($front_office))
+        return false;
     $_SESSION['front_office'] = $front_office;
     return;
 }
@@ -177,16 +179,22 @@ function set_front_office($front_office)
 // Memorizza nelle sessioni anche il nome dell'utente
 function set_name($name)
 {
+    if(!isset($name))
+        return false;
     $_SESSION['name'] = ucfirst($name);
 }
 
 function set_serviceID($serviceID)
 {
+    if(!isset($serviceID))
+        return false;
     $_SESSION['serviceID'] = $serviceID;
 }
 
 function set_usergroup($usergroup)
 {
+    if(!isset($usergroup))
+        return false;
     $_SESSION['usergroup'] = $usergroup;
 }
 
