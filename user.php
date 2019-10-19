@@ -13,6 +13,10 @@ There are 2 type if user(a customer is not considered as *user* in this context)
         Note: use get_serviceID() to check if that frontoffice should check the shortest queue to pick up the ticket to serve (every time a new ticket should be dequeued). 
         */
 
+/**
+ * @param $front_office
+ * @return array
+ */
 function get_user_data($front_office)
 {
     $conn = connectMySQL();
@@ -32,6 +36,10 @@ function get_user_data($front_office)
     }
 }
 
+/**
+ * @param $post_data
+ * @return bool
+ */
 function user_login($post_data)
 {
     $front_office = $post_data["front_office"];
@@ -86,6 +94,11 @@ function user_login($post_data)
     return $success;
 }
 
+/**
+ * @param $front_office
+ * @param $password
+ * @return bool
+ */
 function register($front_office, $password)
 {
     $success = false;
@@ -126,6 +139,10 @@ function register($front_office, $password)
 
 // Get a service name that should be added as service in DB
 // return false on failure
+/**
+ * @param $new_service_to_add
+ * @return bool
+ */
 function add_new_service($new_service_to_add){
     if(!is_admin())
         return false;
@@ -145,22 +162,35 @@ function add_new_service($new_service_to_add){
  ***********************************/
 
 // Login check functions
+/**
+ * @return bool
+ */
 function is_logged()
 {
     return isset($_SESSION['front_office']);
 }
 
+/**
+ * @return bool
+ */
 function is_admin()
 {//TODO: test
     return isset($_SESSION['usergroup']) ? $_SESSION['usergroup'] == "Admin" : false;
 }
 
+/**
+ * @return bool
+ */
 function is_clerk()
 {//TODO: test
     return isset($_SESSION['usergroup']) ? $_SESSION['usergroup'] == "Clerk" : false;
 }
 
 // set login
+/**
+ * @param $front_office
+ * @return bool|void
+ */
 function set_logged($front_office)
 {
     if(!isset($front_office))
@@ -170,6 +200,9 @@ function set_logged($front_office)
 }
 
 //Memorizza nelle sessioni lo front_office
+/**
+ * @param $front_office
+ */
 function set_front_office($front_office)
 {
     $_SESSION['front_office'] = $front_office;
@@ -177,6 +210,10 @@ function set_front_office($front_office)
 }
 
 // Memorizza nelle sessioni anche il nome dell'utente
+/**
+ * @param $name
+ * @return bool
+ */
 function set_name($name)
 {
     if(!isset($name))
@@ -184,6 +221,10 @@ function set_name($name)
     $_SESSION['name'] = ucfirst($name);
 }
 
+/**
+ * @param $serviceID
+ * @return bool
+ */
 function set_serviceID($serviceID)
 {
     if(!isset($serviceID))
@@ -191,6 +232,10 @@ function set_serviceID($serviceID)
     $_SESSION['serviceID'] = $serviceID;
 }
 
+/**
+ * @param $usergroup
+ * @return bool
+ */
 function set_usergroup($usergroup)
 {
     if(!isset($usergroup))
@@ -199,26 +244,41 @@ function set_usergroup($usergroup)
 }
 
 //Restituisce la mail memorizzata nelle sessioni o stringa vuota se non settata
+/**
+ * @return mixed|string
+ */
 function get_front_office()
 {
     return isset($_SESSION['front_office']) ? $_SESSION['front_office'] : '';
 }
 
+/**
+ * @return mixed|string
+ */
 function get_name()
 {
     return isset($_SESSION['name']) ? $_SESSION['name'] : '';
 }
 
+/**
+ * @return bool|mixed
+ */
 function get_serviceID()
 {
     return isset($_SESSION['serviceID']) ? $_SESSION['serviceID'] : false;
 }
 
+/**
+ * @return mixed|string
+ */
 function get_usergroup()
 {
     return isset($_SESSION['usergroup']) ? $_SESSION['usergroup'] : '';
 }
 
+/**
+ * @param $ticket_info
+ */
 function clerk_register_ticket($ticket_info){
     
     $_SESSION['ticketN'] = $ticket_info["ticketN"];
@@ -227,6 +287,9 @@ function clerk_register_ticket($ticket_info){
     $_SESSION['timestamp'] = $ticket_info["timestamp"];
 }
 
+/**
+ * @return mixed
+ */
 function clerk_get_cur_ticket(){
     $ticket_info["ticketN"] = $_SESSION['ticketN'];
     //$ticket_info["service"] = $_SESSION['service'];
@@ -235,6 +298,9 @@ function clerk_get_cur_ticket(){
     return $ticket_info;
 }
 
+/**
+ * @return bool|string
+ */
 function get_clerk_content()
 {
     //<a class="btn btn-primary" href="#" role="button">Link</a>
@@ -253,6 +319,9 @@ function get_clerk_content()
     return $content;
 }
 
+/**
+ * @return string
+ */
 function get_clerk_side_content()
 {
     $clerk_side_content = '
@@ -277,6 +346,9 @@ function get_clerk_side_content()
     return $clerk_side_content;
 }
 
+/**
+ * @return bool|string
+ */
 function get_admin_content()
 {
     if (!is_admin())
@@ -302,6 +374,9 @@ function get_admin_content()
     return $content;
 }
 
+/**
+ * @return null
+ */
 function get_admin_side_content()
 {
     $admin_side_content = get_side_content_as_html();
@@ -310,6 +385,10 @@ function get_admin_side_content()
 }
 
 // Check functions
+/**
+ * @param $email
+ * @return false|int
+ */
 function is_email($email)
 {
     $regex = '/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/';
