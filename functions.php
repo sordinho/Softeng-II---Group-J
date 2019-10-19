@@ -3,8 +3,14 @@
 /**		File contenente le funzioni ausiliarie utilizzate		**/
 
 require_once("config.php");
-
-
+require_once("queue.php");
+/**
+  * Print the base html template (2 section (MAIN_CONTENT[67% width] | SIDE_CONTENT[33%]))
+  *
+  * @param $content html well formatted code that should be rendered in the center content
+  *
+  * @return null 
+  */
 function render_page($content, $side_content){
     // Render header section
     include 'header.php';
@@ -25,17 +31,27 @@ function render_page($content, $side_content){
     include 'footer.php';
 }
 
+/**
+  * Print the error html template 
+  *
+  * @param int $nerr
+  *
+  * @return null 
+  */
 function get_error($nerr){
     $messages = array(
         1 => 'Insert all the fields.',
         2 => 'Already logged in.',
         3 => 'You cant do such operation (missing permission).',
         4 => '.',
-        5 => '.'
+        5 => 'Uknown error'
     );
+    if(int($nerr)>4 || int($nerr)<1){
+        $nerr = 5;
+    }
     $content = '
     <div class="alert alert-warning" role="alert">'.
-        $messages[$nerr].
+        $messages[int($nerr)].
         '<br>In a few seconds you will be redirected to home. If you are in a hurry <a href="./index.php" class="alert-link">just click here!</a>
     </div>
     <meta http-equiv=\'refresh\' content=\'7; url=./index.php\' />
@@ -43,6 +59,13 @@ function get_error($nerr){
     render_page($content, ""); // TODO: eventually add a side_content
 }
 
+/**
+  * Create a connection 
+  *
+  * @param null 
+  *
+  * @return mysqli return a mysqli object to handle connection to the default DB
+  */
 function connectMySQL() {
     $mysqli = new mysqli(DBAddr, DBUser, DBPassword, DBName);
     /* check connection */
@@ -52,7 +75,13 @@ function connectMySQL() {
     }
     return $mysqli;
 }
-
+/**
+  * Convert a timestamp into a defined array
+  *
+  * @param int $nerr
+  *
+  * @return array[] Returns an array of string that represents a date
+  */
 function timestamp_to_date($timestamp){
     $date['month'] = date("M", $timestamp);
     $date['day']= date("d", $timestamp);
@@ -60,6 +89,14 @@ function timestamp_to_date($timestamp){
     return $date;
 }
 
+
+/**
+  * Print the service list (obtained by querying the db) html content based on a template 
+  *
+  * @param null 
+  *
+  * @return null 
+  */
 function get_services_as_list_html(){
     $content = "";
     $conn = connectMySQL();
@@ -79,12 +116,14 @@ function get_services_as_list_html(){
     return $content;
 }
 
-// Should return the number of the actual service (count su tabella services)
-function get_service_num(){
 
-}
-
-//function that loads datas from DB and build HTML string to generate the side panel
+/**
+  * 
+  * :oads datas from DB and print HTML string to generate the side panel
+  * @param null 
+  *
+  * @return null 
+  */
 function get_side_content_as_html(){
     $tot_lenght_html_paragraph = get_totatal_lenght();
     $tot_num_of_service = get_totatal_service_num();
@@ -127,7 +166,5 @@ function get_side_content_as_html(){
         </section>';
     return $side_content;
 }
-
-
 
 ?>

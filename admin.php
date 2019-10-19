@@ -1,6 +1,8 @@
 <?php
 require_once('config.php');
 require_once('functions.php');
+require_once('user.php');
+
 
 
 // Register a new service into the DB
