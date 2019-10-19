@@ -3,7 +3,7 @@
 /**		File contenente le funzioni ausiliarie utilizzate		**/
 
 require_once("config.php");
-require_once("queue.php")
+require_once("queue.php");
 /**
   * Print the base html template (2 section (MAIN_CONTENT[67% width] | SIDE_CONTENT[33%]))
   *
