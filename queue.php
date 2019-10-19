@@ -54,7 +54,7 @@ function get_bottom($service_name){
 function get_bottom_ticket_by_id($service_id){
     $conn = connectMySQL(); 
     $service_id = intval($service_id);
-    $sql = "SELECT ID, ServiceID, TicketNumber AS ticketN, Timestamp AS timestamp FROM Queue WHERE TicketNumber IN (select MIN(TicketNumber) FROM Queue WHERE ServiceID=$service_id) AND ServiceID=$service_id";
+    $sql = "SELECT ID, ServiceID, TicketNumber AS ticketN, Timestamp AS timestamp FROM Queue WHERE TicketNumber IN (select MIN(TicketNumber) FROM Queue WHERE ServiceID='$service_id') AND ServiceID='$service_id'";
     $ticket_info = array();
     if ($result = $conn->query($sql)) {
         if ($result->num_rows === 1) {
@@ -91,7 +91,7 @@ function get_next($serviceID) {
          * get the minimum numbered ticket from a given serviceID queue
          */
         $conn = connectMySQL();
-        $sql = "SELECT ID, ServiceID AS serviceID, TicketNumber ticketN, Timestamp AS timestamp from Queue where TicketNumber IN (SELECT MIN(TicketNumber) FROM Queue WHERE ServiceID=".$serviceID.") AND ServiceID=".$serviceID.";";
+        $sql = "SELECT ID, ServiceID AS serviceID, TicketNumber ticketN, Timestamp AS timestamp from Queue where TicketNumber IN (SELECT MIN(TicketNumber) FROM Queue WHERE ServiceID='$serviceID') AND ServiceID='$serviceID'";
         $ticket_info = array();
         if ($result = $conn->query($sql)) {
             if ($result->num_rows === 1) {
@@ -116,7 +116,7 @@ function delete_ticket($serviceID, $ticketN) {
     $conn = connectMySQL();
     $service_id = intval($serviceID);
     $ticket_n = intval($ticketN);
-    $sql = "DELETE FROM Queue WHERE TicketNumber = $ticket_n AND ServiceID=$service_id";
+    $sql = "DELETE FROM Queue WHERE TicketNumber = $ticket_n AND ServiceID='$service_id'";
     if ($result = $conn->query($sql)) {
         return ($result->num_rows > 0);
     } else {
