@@ -125,8 +125,8 @@ function get_services_as_list_html(){
   * @return null 
   */
 function get_side_content_as_html(){
-    $tot_lenght_html_paragraph = get_totatal_lenght();
-    $tot_num_of_service = get_totatal_service_num();
+    $tot_lenght_html_paragraph = get_total_lenght();
+    $tot_num_of_service = get_total_service_num();
     $side_content = '
         <section class="component-nstats">
             <div class="nstats">
