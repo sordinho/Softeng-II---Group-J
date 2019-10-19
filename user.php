@@ -124,6 +124,22 @@ function register($front_office, $password)
     }
 }
 
+// Get a service name that should be added as service in DB
+// return false on failure
+function add_new_service($new_service_to_add){
+    if(!is_admin())
+        return false;
+    $conn = connectMySQL();
+    // Query for adding new service to service table
+    $addService = "INSERT INTO Service(Name,Counter) VALUES (?,0)";
+    $query = $conn->prepare($addService);
+    if(!$query)
+        return false;
+    $query->bind_param('s', $new_service_to_add);
+    $res = $query->execute();
+    return $res;
+}
+
 /***********************************
  * Check login status
  ***********************************/
@@ -147,6 +163,8 @@ function is_clerk()
 // set login
 function set_logged($front_office)
 {
+    if(!isset($front_office))
+        return false;
     $_SESSION['front_office'] = $front_office;
     return;
 }
@@ -161,16 +179,22 @@ function set_front_office($front_office)
 // Memorizza nelle sessioni anche il nome dell'utente
 function set_name($name)
 {
+    if(!isset($name))
+        return false;
     $_SESSION['name'] = ucfirst($name);
 }
 
 function set_serviceID($serviceID)
 {
+    if(!isset($serviceID))
+        return false;
     $_SESSION['serviceID'] = $serviceID;
 }
 
 function set_usergroup($usergroup)
 {
+    if(!isset($usergroup))
+        return false;
     $_SESSION['usergroup'] = $usergroup;
 }
 
@@ -259,21 +283,21 @@ function get_admin_content()
         return false;
 
     $content = '
-      <!-- The container  -->
-      <div class="container">
+    <!-- The container  -->
+    <div class="container">
         <div class="wrapper">
-          <br/>
-          <h1>Register a new service</h1>
-          <p class="lead">Insert the name and select to wich counter assign it.<br></p>
-          <form action="./admin.php?action=newService" method="POST">
-          <div class="form-group">
-              <label for="exampleFormControlSelect2">New Service</label>
-              <input name="newService" class="form-control" id="newService">                         
-          </div>
-          <button type="submit" class="btn btn-primary">Register</button>
+            <br/>
+            <h1>Register a new service</h1>
+            <p class="lead">Insert the name and select to wich counter assign it.<br></p>
+            <form action="./admin.php?action=newService" method="POST">
+            <div class="form-group">
+                <label for="exampleFormControlSelect2">New Service</label>
+                <input name="newService" class="form-control" id="newService">                         
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
         </form>
-      </div>
-      </div>';
+        </div>
+    </div>';
 
     return $content;
 }

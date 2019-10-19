@@ -29,7 +29,7 @@ body {
 }
 
 .nstats {
-    color: #fff;
+    color: rgba(14, 99, 167, 1);
 }
 .nstats .networks {
     text-align: center;

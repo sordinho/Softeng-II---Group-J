@@ -8,14 +8,7 @@ if ($_GET['action'] == "newService" && isset($_POST['newService'])) {
 //    echo "<pre>".print_r($_POST,TRUE)."</pre>";
 
     $newServiceToAdd = $_POST["newService"];
-
-    $conn = connectMySQL();
-
-    // Query for adding new service to service table
-    $addService = "INSERT INTO Service(Name,Counter) VALUES (?,0)";
-    $query = $conn->prepare($addService);
-    $query->bind_param('s', $newServiceToAdd);
-    $res = $query->execute();
+    $res = add_new_service($newServiceToAdd);
 
     if ($res) {
         $content = <<< EOT
