@@ -82,8 +82,8 @@ function user_login($post_data)
     set_usergroup($userinfo['usergroup']);
     set_name($userinfo['front_office']);             // todo controllare questa riga, era: set_name($userinfo['name']); ----- ma name non esiste
     set_front_office($userinfo['front_office']);
-    
-    if ($userinfo["serviceID"] != -1){// admin has a -1 value on serviceID field
+
+    if ($userinfo["serviceID"] != -1) {// admin has a -1 value on serviceID field
         // Get also the first ticket that need to be served
         $ticket_info = get_next($userinfo["serviceID"]);
         print_r($ticket_info);
@@ -143,14 +143,15 @@ function register($front_office, $password)
  * @param $new_service_to_add
  * @return bool
  */
-function add_new_service($new_service_to_add){
-    if(!is_admin())
+function add_new_service($new_service_to_add)
+{
+    if (!is_admin())
         return false;
     $conn = connectMySQL();
     // Query for adding new service to service table
     $addService = "INSERT INTO Service(Name,Counter) VALUES (?,0)";
     $query = $conn->prepare($addService);
-    if(!$query)
+    if (!$query)
         return false;
     $query->bind_param('s', $new_service_to_add);
     $res = $query->execute();
@@ -193,7 +194,7 @@ function is_clerk()
  */
 function set_logged($front_office)
 {
-    if(!isset($front_office))
+    if (!isset($front_office))
         return false;
     $_SESSION['front_office'] = $front_office;
     return;
@@ -216,7 +217,7 @@ function set_front_office($front_office)
  */
 function set_name($name)
 {
-    if(!isset($name))
+    if (!isset($name))
         return false;
     $_SESSION['name'] = ucfirst($name);
 }
@@ -227,7 +228,7 @@ function set_name($name)
  */
 function set_serviceID($serviceID)
 {
-    if(!isset($serviceID))
+    if (!isset($serviceID))
         return false;
     $_SESSION['serviceID'] = $serviceID;
 }
@@ -238,7 +239,7 @@ function set_serviceID($serviceID)
  */
 function set_usergroup($usergroup)
 {
-    if(!isset($usergroup))
+    if (!isset($usergroup))
         return false;
     $_SESSION['usergroup'] = $usergroup;
 }
@@ -279,8 +280,9 @@ function get_usergroup()
 /**
  * @param $ticket_info
  */
-function clerk_register_ticket($ticket_info){
-    
+function clerk_register_ticket($ticket_info)
+{
+
     $_SESSION['ticketN'] = $ticket_info["ticketN"];
     //$_SESSION['service'] = $ticket_info["service"];
     $_SESSION['serviceID'] = $ticket_info["serviceID"];
@@ -290,7 +292,8 @@ function clerk_register_ticket($ticket_info){
 /**
  * @return mixed
  */
-function clerk_get_cur_ticket(){
+function clerk_get_cur_ticket()
+{
     $ticket_info["ticketN"] = $_SESSION['ticketN'];
     //$ticket_info["service"] = $_SESSION['service'];
     $ticket_info["serviceID"] = $_SESSION['serviceID'];
@@ -324,15 +327,22 @@ function get_clerk_content()
  */
 function get_clerk_side_content()
 {
+    if (get_serviceID() == '1')
+        $offeredService = 'Packages';
+    elseif (get_serviceID() == '2')
+        $offeredService = 'Accounts';
+    else
+        $offeredService = 'Packages / Accounts';
+
     $clerk_side_content = '
             
             <section class="component-nstats">
                 <div class="nstats">
                     <div class="networks">
                         <div class="network uptime">
-                            <p class="title">Front office no.</p>
-                            <p class="tally">' . $_SESSION['serviceID'] . '</p>
-                            <p class="unit">Packages / Accounts</p>
+                            <p class="title">Service no.</p>
+                            <p class="tally">' . get_serviceID() . '</p>
+                            <p class="unit">' . $offeredService . '</p>
                         </div>
 
         
