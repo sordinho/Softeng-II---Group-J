@@ -180,7 +180,7 @@ function delete_ticket($serviceID, $ticketN) {
     $conn = connectMySQL();
     $service_id = intval($serviceID);
     $ticket_n = intval($ticketN);
-    $sql = "DELETE FROM Queue WHERE TicketNumber = '$ticket_n' AND ServiceID='$service_id'";
+    $sql = "DELETE FROM Queue WHERE TicketNumber = $ticket_n AND ServiceID=$service_id";
     if ($result = $conn->query($sql)) {
         return ($result->num_rows === 1);
     } else {
@@ -196,8 +196,9 @@ function update_stats($serviceID) {
      * false instead
      */
     $conn = connectMySQL();
-    $sql1 = "update Authentication set Counter=Counter+1 where ServiceID='$serviceID'";
-    $sql2 = "update Service set Counter=Counter+1 where ID='$serviceID'";
+    $serviceID = intval($serviceID);
+    $sql1 = "update Authentication set Counter=Counter+1 where ServiceID=$serviceID";
+    $sql2 = "update Service set Counter=Counter+1 where ID=$serviceID";
     $result1 = $conn->query($sql1);
     $result2 = $conn->query($sql2);
 
