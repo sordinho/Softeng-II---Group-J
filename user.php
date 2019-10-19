@@ -124,6 +124,22 @@ function register($front_office, $password)
     }
 }
 
+// Get a service name that should be added as service in DB
+// return false on failure
+function add_new_service($new_service_to_add){
+    if(!is_admin())
+        return false;
+    $conn = connectMySQL();
+    // Query for adding new service to service table
+    $addService = "INSERT INTO Service(Name,Counter) VALUES (?,0)";
+    $query = $conn->prepare($addService);
+    if(!$query)
+        return false;
+    $query->bind_param('s', $new_service_to_add);
+    $res = $query->execute();
+    return $res;
+}
+
 /***********************************
  * Check login status
  ***********************************/
