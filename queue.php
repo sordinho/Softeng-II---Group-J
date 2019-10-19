@@ -111,10 +111,10 @@ function get_next($serviceID) {
          */
 
         /*
-         *  select count(*) maximum from (select count(*) count from Queue group by ServiceID) s having maximum=max(s.count);
+         *  select max(s.count) maximum from (select count(*) count from Queue group by ServiceID) s;
             select serviceID from Queue group by ServiceID having count(*)=2;
             select serviceID, min(ticketNumber) ticketN from Queue where serviceID in (select serviceID from Queue group by ServiceID having count(*)=2) group by serviceID;
-            select id, serviceID, ticketNumber ticketN, timestamp from Queue where ticketNumber in (select min(ticketNumber) from Queue where serviceID in (select serviceID from Queue group by ServiceID having count(*)=2) group by serviceID) order by timestamp asc;
+            select id, serviceID, ticketNumber ticketN, timestamp from Queue where ticketNumber in (select min(ticketNumber) from Queue where serviceID in (select serviceID from Queue group by ServiceID having count(*)=2) group by serviceID) order by timestamp asc limit 1;
          */
         $conn = connectMySQL();
         /*
@@ -158,7 +158,7 @@ function get_next($serviceID) {
         $sql = "SELECT ID, ServiceID AS serviceID, TicketNumber ticketN, Timestamp AS timestamp from Queue where TicketNumber IN (SELECT MIN(TicketNumber) FROM Queue WHERE ServiceID=$serviceID) AND ServiceID=$serviceID";
         $ticket_info = array();
         if ($result = $conn->query($sql)) {
-            if ($result->num_rows === 1) {
+            if ($conn->affected_rows === 1) {
                 $ticket_info = $result->fetch_assoc();
             }
         } else {
@@ -182,7 +182,7 @@ function delete_ticket($serviceID, $ticketN) {
     $ticket_n = intval($ticketN);
     $sql = "DELETE FROM Queue WHERE TicketNumber = $ticket_n AND ServiceID=$service_id";
     if ($result = $conn->query($sql)) {
-        return ($result->num_rows === 1);
+        return ($conn->affected_rows === 1);
     } else {
         printf("Error message: %s\n", $conn->error);
         return false;
