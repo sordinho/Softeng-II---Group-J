@@ -68,7 +68,7 @@ function get_bottom_ticket_by_id($service_id){
 
 function get_next($serviceID) {
 
-    if ($serviceID === 0) {
+    if ($serviceID == 0) {
         /*
          * get the current minimum ticket number from the current most sized queue
          * in case of equal queue size, the query picks the ticket number of the serviceID queue
