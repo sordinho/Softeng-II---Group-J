@@ -51,6 +51,7 @@ function get_bottom($service_name){
             printf("Error message: %s\n", $conn->error);
         }
 }
+// Not used for now
 function get_bottom_ticket_by_id($service_id){
     $conn = connectMySQL(); 
     $service_id = intval($service_id);
@@ -143,6 +144,24 @@ function update_stats($serviceID) {
         printf("Error message: %s\n", $conn->error);
         return false;
     }
+}
+/*Get current queued ticket for a given service.
+    return -1 on failure*/
+function get_length_by_service_id($service_id){
+    //SELECT COUNT(ID) FROM Queue WHERE ServiceID=3
+    $conn = connectMySQL();
+    $serviceID = intval($service_id);
+    $sql = "SELECT COUNT(ID) as counter FROM Queue WHERE ServiceID=".$service_id;
+    $queue = -1;
+    if ($result = $conn->query($sql)) {
+        if ($result->num_rows === 1) {
+            $queue= $result->fetch_assoc();
+        }
+    } else {
+        printf("Error message: %s\n", $conn->error);
+        print("\n".$serviceID);
+    }
+    return $queue["counter"];
 }
 
 function get_currently_served_ticket_by($service_name){
