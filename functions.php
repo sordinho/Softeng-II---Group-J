@@ -86,62 +86,33 @@ function get_service_num(){
 
 //function that loads datas from DB and build HTML string to generate the side panel
 function get_side_content_as_html(){
+    $tot_lenght_html_paragraph = get_totatal_lenght();
+    $tot_num_of_service = get_totatal_service_num();
     $side_content = '
         <section class="component-nstats">
             <div class="nstats">
             <div class="networks">
                 <div class="network uptime">
-                <p class="title">Service</p>';
-
-        // Create connection
-    $conn = connectMySQL();
-
-    $sql = "SELECT COUNT(*) as n FROM Service";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $side_content .= '<p class="tally">'. $row["n"] .'</p>';
-        $conn->close();
-    }
-
-
-    $side_content.='
-        <p class="unit">Services</p>
-        </div>
-
+                <p class="title">Service</p>'.$tot_num_of_service
+                .'<p class="unit">Services</p>
+            </div>
         <div class="network smartobject">
-        <p class="title">Waiting</p>';
+        <p class="title">Waiting</p>'.$tot_lenght_html_paragraph
+    .'
+        <p class="unit">in queue</p>
+        </div>      
 
-
-    $conn = connectMySQL();
-
-    $sql = "SELECT COUNT(*) as n FROM Queue";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $side_content .= '<p class="tally">'. $row["n"] .'</p>';
-        $conn->close();
-    }
-
-
-    $side_content.='
-            <p class="unit">in queue</p>
-            </div>      
-    
-            <div class="network actions">
+        <div class="network actions">
             <p class="title">Estimated</p>
             <p class="tally">2</p>
             <p class="unit">Waiting time</p>
-            </div>
-    
-            <div class="network user">
+        </div>
+
+        <div class="network user">
             <p class="title">Total</p>
             <p class="tally">156</p>
             <p class="unit">People</p>
-            </div>
-            
+        </div>
             <div class="ui-horizontal-lines"></div>
         </div>
     

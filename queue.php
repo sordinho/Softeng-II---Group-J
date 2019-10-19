@@ -198,6 +198,33 @@ function get_length_by_service_id($service_id){
     return $queue["counter"];
 }
 
+function get_totatal_service_num(){
+    // Create connection
+    $conn = connectMySQL();
+    $side_content = '<p class="tally"></p>';
+    $sql = "SELECT COUNT(*) as n FROM Service";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $side_content = '<p class="tally">'. $row["n"] .'</p>';
+        $conn->close();
+    }
+    return $side_content;
+}
+
+function get_totatal_lenght(){
+    $conn = connectMySQL();
+    $paragraph_content = '<p class="tally"></p>';
+    $sql = "SELECT COUNT(*) as n FROM Queue";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $paragraph_content = '<p class="tally">'. $row["n"] .'</p>';
+        $conn->close();
+    }
+    return $paragraph_content;
+}
 function get_currently_served_ticket_by($service_name){
     return get_bottom($service_name);
 }
