@@ -111,7 +111,7 @@ function get_next($serviceID) {
          */
 
         /*
-         *  select count(*) minimum from (select count(*) count from Queue group by ServiceID) s having minimum=min(s.count);
+         *  select count(*) maximum from (select count(*) count from Queue group by ServiceID) s having maximum=max(s.count);
             select serviceID from Queue group by ServiceID having count(*)=2;
             select serviceID, min(ticketNumber) ticketN from Queue where serviceID in (select serviceID from Queue group by ServiceID having count(*)=2) group by serviceID;
             select id, serviceID, ticketNumber ticketN, timestamp from Queue where ticketNumber in (select min(ticketNumber) from Queue where serviceID in (select serviceID from Queue group by ServiceID having count(*)=2) group by serviceID) order by timestamp asc;
@@ -120,7 +120,7 @@ function get_next($serviceID) {
         /*
          * first it gets the maximum sized queue and stores the result into a variable
          */
-        $query1 = "select count(*) maximum from (select count(*) count from Queue group by ServiceID) s having maximum=max(s.count);";
+        $query1 = "select max(s.count) maximum from (select count(*) count from Queue group by ServiceID) s";
         $ticket_info = array();
         if ($result1 = $conn->query($query1)) {
             $row = $result1->fetch_object();
@@ -132,7 +132,7 @@ function get_next($serviceID) {
              * from a partial window that displays all the serviceID queues given $count
              * and in the end it limits the result at 1 to only get a single ticket
              */
-            $query2 = "select id, serviceID, ticketNumber ticketN, timestamp from Queue where ticketNumber in (select min(ticketNumber) from Queue where serviceID in (select serviceID from Queue group by ServiceID having count(*)='$count') group by serviceID) order by timestamp asc limit 1;";
+            $query2 = "select id, serviceID, ticketNumber ticketN, timestamp from Queue where ticketNumber in (select min(ticketNumber) from Queue where serviceID in (select serviceID from Queue group by ServiceID having count(*)='$count') group by serviceID) order by timestamp asc limit 1";
             if ($result2 = $conn->query($query2)) {
                 if ($result2->num_rows === 1) {
                     $ticket_info = $result2->fetch_assoc();
