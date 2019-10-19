@@ -116,9 +116,9 @@ function delete_ticket($serviceID, $ticketN) {
     $conn = connectMySQL();
     $service_id = intval($serviceID);
     $ticket_n = intval($ticketN);
-    $sql = "DELETE FROM Queue WHERE TicketNumber = $ticket_n AND ServiceID='$service_id'";
+    $sql = "DELETE FROM Queue WHERE TicketNumber = '$ticket_n' AND ServiceID='$service_id'";
     if ($result = $conn->query($sql)) {
-        return ($result->num_rows > 0);
+        return ($result->num_rows === 1);
     } else {
         printf("Error message: %s\n", $conn->error);
         return false;
@@ -134,8 +134,11 @@ function update_stats($serviceID) {
     $conn = connectMySQL();
     $sql1 = "update Authentication set Counter=Counter+1 where ServiceID='$serviceID'";
     $sql2 = "update Service set Counter=Counter+1 where ID='$serviceID'";
-    if ($result1 = $conn->query($sql1) && $result2 = $conn->query($sql2)) {
-        return ($result1->num_rows === 1 && $result1->num_rows === 1);
+    $result1 = $conn->query($sql1);
+    $result2 = $conn->query($sql2);
+
+    if ($result1 && $result2) {
+        return ($result1->num_rows === 1 && $result2->num_rows === 1);
     } else {
         printf("Error message: %s\n", $conn->error);
         return false;

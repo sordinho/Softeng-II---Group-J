@@ -8,7 +8,7 @@ if($_GET['action'] == "nextTicket" && is_clerk()){
     $ticket_info = clerk_get_cur_ticket();
     delete_ticket(get_serviceID(), $ticket_info['ticketN']);
     // 2) Increase counter for stats (Both in Service table and Authentication table)
-    update_stats(get_serviceID());
+    update_stats($ticket_info['serviceID']);
     // 3)Get new ticket to serve
     $ticket_info = get_next(get_serviceID());
     // 4) Save in the session the new current info about ticket
