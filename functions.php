@@ -96,7 +96,7 @@ function get_side_content_as_html(){
         // Create connection
     $conn = connectMySQL();
 
-    $sql = "SELECT COUNT(*) as n FROM service";
+    $sql = "SELECT COUNT(*) as n FROM Service";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -116,7 +116,7 @@ function get_side_content_as_html(){
 
     $conn = connectMySQL();
 
-    $sql = "SELECT COUNT(*) as n FROM queue";
+    $sql = "SELECT COUNT(*) as n FROM Queue";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
