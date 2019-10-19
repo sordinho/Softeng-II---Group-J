@@ -7,7 +7,7 @@ require_once('user.php');
 // Queue ticket handler
 function add_top($service_name){
             // Do an insert and get back the info about the generated number
-            $mysqli = connectMySQL(); 
+            $mysqli = connectMySQL(); //IsNull(user_Name, 'Unknown Name')
             $sql = 'INSERT INTO Queue(ServiceID, TicketNumber) SELECT Service.ID,MAX(TicketNumber)+1  FROM Queue JOIN Service ON ServiceID=Service.ID WHERE Service.Name = ? GROUP BY ServiceID';
             $query = $mysqli->prepare($sql);
             //echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
