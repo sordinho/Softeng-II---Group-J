@@ -334,6 +334,8 @@ function get_clerk_side_content()
     else
         $offeredService = 'Packages / Accounts';
 
+    $servedUser = clerk_get_cur_ticket()['ticketN'];
+
     $clerk_side_content = '
             
             <section class="component-nstats">
@@ -344,13 +346,27 @@ function get_clerk_side_content()
                             <p class="tally">' . get_serviceID() . '</p>
                             <p class="unit">' . $offeredService . '</p>
                         </div>
-
-        
+                        
+                        <div class="network actions">
+                            <p class="title"></p>
+                            <p class="tally"></p>
+                            <p class="unit"></p>
+                        </div>
+                        <div class="network actions">
+                            <p class="title"></p>
+                            <p class="tally"></p>
+                            <p class="unit"></p>
+                        </div>
+                        
+                        <div class="network user">
+                            <p class="title">Ticket no.</p>
+                            <p class="tally">'.$servedUser.'</p>
+                            <p class="unit">Serving</p>
+                        </div>
+                         <div class="ui-horizontal-lines"></div>
                     </div>
-
-
                 </div>
-</section>
+            </section>
         ';
 
     return $clerk_side_content;
