@@ -155,7 +155,7 @@ function get_next($serviceID) {
          * get the minimum numbered ticket from a given serviceID queue
          */
         $conn = connectMySQL();
-        $sql = "SELECT ID, ServiceID AS serviceID, TicketNumber ticketN, Timestamp AS timestamp from Queue where TicketNumber IN (SELECT MIN(TicketNumber) FROM Queue WHERE ServiceID='$serviceID') AND ServiceID='$serviceID'";
+        $sql = "SELECT ID, ServiceID AS serviceID, TicketNumber ticketN, Timestamp AS timestamp from Queue where TicketNumber IN (SELECT MIN(TicketNumber) FROM Queue WHERE ServiceID=$serviceID) AND ServiceID=$serviceID";
         $ticket_info = array();
         if ($result = $conn->query($sql)) {
             if ($result->num_rows === 1) {
