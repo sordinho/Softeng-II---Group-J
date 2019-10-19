@@ -74,7 +74,16 @@ function user_login($post_data)
     set_usergroup($userinfo['usergroup']);
     set_name($userinfo['front_office']);             // todo controllare questa riga, era: set_name($userinfo['name']); ----- ma name non esiste
     set_front_office($userinfo['front_office']);
-    if ($userinfo["serviceID"] != -1){// admin has a -1 value on serviceID field
+    
+    if ($userinfo["serviceID"] == 0){// admin has a -1 value on serviceID field
+        // Get also the first ticket that need to be served
+        //$serviceID = get_service_to_offer_for_multi_frontoffice();
+        $ticket_info = get_bottom_ticket_by_id($userinfo["serviceID"]);
+        clerk_register_ticket($ticket_info);
+        set_serviceID($userinfo["serviceID"]);
+        //print_r(clerk_get_cur_ticket());
+    }
+    elseif ($userinfo["serviceID"] != -1){// admin has a -1 value on serviceID field
         // Get also the first ticket that need to be served
         $ticket_info = get_bottom_ticket_by_id($userinfo["serviceID"]);
         clerk_register_ticket($ticket_info);
