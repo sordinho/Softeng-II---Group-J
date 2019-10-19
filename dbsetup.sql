@@ -112,8 +112,8 @@ ALTER TABLE `Queue`
 -- Indici per le tabelle `Service`
 --
 ALTER TABLE `Service`
-  ADD PRIMARY KEY (`ID`);
-
+  ADD PRIMARY KEY (`ID`),
+  ADD UNIQUE KEY `Name` (`Name`);
 --
 -- AUTO_INCREMENT per le tabelle scaricate
 --
