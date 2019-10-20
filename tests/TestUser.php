@@ -197,7 +197,7 @@ function set_front_office($front_office)
         $res = '
             
             <section class="component-nstats">
-                <div class="nstats">
+                <div class="nstats2">
                     <div class="networks">
                         <div class="network uptime">
                             <p class="title">Service no.</p>
@@ -231,7 +231,7 @@ function set_front_office($front_office)
         $res = '
             
             <section class="component-nstats">
-                <div class="nstats">
+                <div class="nstats2">
                     <div class="networks">
                         <div class="network uptime">
                             <p class="title">Service no.</p>
@@ -265,7 +265,7 @@ function set_front_office($front_office)
         $res = '
             
             <section class="component-nstats">
-                <div class="nstats">
+                <div class="nstats2">
                     <div class="networks">
                         <div class="network uptime">
                             <p class="title">Service no.</p>

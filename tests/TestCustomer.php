@@ -61,14 +61,18 @@ class TestCustomer extends TestCase
         $this->assertEquals(11,$res['ticketN'],"TestCustomer: test_get_ticket error: wrong returned [ticketn] value");
         $this->assertEquals('test',$res['service'],"TestCustomer: test_get_ticket error: wrong returned [service] value");
     }
-    /*public function test_get_distance_from_top(){
+    public function test_get_distance_from_top(){
         //todo
-        $_SESSION['ticketN']=3;
+        $_SESSION['ticketN']=1;
         $_SESSION['service']="test";
         $_SESSION['serviceID']=1;
         $dist = get_distance_from_top();
-        $this->assertEquals(3,$dist);
-    }*/
+        $this->assertEquals(1,$dist);
+        $_SESSION['ticketN'] = 0;
+        $_SESSION['serviceID'] = 2;
+        $dist = get_distance_from_top();
+        $this->assertEquals(0,$dist);
+    }
 
     /*public function test_get_ticket_html(){
         //todo when the method is complete

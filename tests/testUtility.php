@@ -29,7 +29,7 @@ function createTestDatabase() {
         $templine .= $line;
 
         if (substr(trim($line), -1, 1) == ';') {
-            $mysqli->query($templine) or print('Error performing query \'< strong>' . $templine . '\': ' . $mysqli->error() . '<br /><br />');
+            $mysqli->query($templine) or print('Error performing query \'< strong>' . $templine . '\': ' . $mysqli->error . '<br /><br />');
 
             $templine = '';
         }
