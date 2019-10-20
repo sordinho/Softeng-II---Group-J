@@ -6,6 +6,14 @@ require_once 'testConfig.php';
 /**
  * To be used in setUp() and tearDown() methods for tests
  *
+ * Configuration of the DB:
+ * ----------------------------------------------------------
+ * |ID  |ServiceID  |TicketNUmber   |Timestamp              |
+ * ----------------------------------------------------------
+ * |2   |2          |0              |2019-10-19 12:18:17    |
+ * |61  |1          |0              |2019-10-19 16:31:49    |
+ * |62  |1          |1              |2019-10-19 20:03:25    |
+ * ----------------------------------------------------------
  * @param null
  *
  * @return null
@@ -74,6 +82,24 @@ function perform_SELECT_return_single_value($sql) {
 }
 
 /**
+ * @param query you want to perform containing --only-- INSERT or DELETE statement
+ *
+ * @return bool according if the operation succeded
+ */
+function perform_INSERT_or_DELETE($sql) {
+    $conn = TestsConnectMySQL();
+
+    if ($result = $conn->query($sql)) {
+        $result->close();
+        return true;
+    }
+    else {
+        printf("Error message: %s\n", $conn->error);
+        return false;
+    }
+}
+
+/**
  * Creates a connection to the DB for testing
  * Connection is to be closed by the caller function
  *
@@ -89,4 +115,8 @@ function TestsConnectMySQL() {
         exit();
     }
     return $mysqli;
+}
+
+function get_serviceID_by_service_name($service_name) {
+    return perform_SELECT_return_single_value("SELECT ID FROM Service WHERE Name = '{$service_name}'");
 }
