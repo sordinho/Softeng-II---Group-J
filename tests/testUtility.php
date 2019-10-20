@@ -13,12 +13,13 @@ require_once 'testConfig.php';
 function createTestDatabase() {
     $filename = 'testSofteng2.sql';
 
-    $mysqli = new mysqli(DBAddrTest, DBUserTest, DBPasswordTest, DBNameTest);
+    $mysqli = new mysqli(DBAddrTest, DBUserTest, DBPasswordTest);
 
     if ($mysqli->connect_errno) {
         printf("Connect failed: %s\n", $mysqli->connect_errno);
     }
-
+    $mysqli->query("CREATE DATABASE testsofteng2;");
+    $mysqli->query("USE testsofteng2;");
     $templine = '';
     $lines = file($filename);
 
@@ -49,8 +50,8 @@ function createTestDatabase() {
 function dropTestDatabase() {
     $mysqli = TestsConnectMySQL();
 
-    if ($mysqli->query("DROP DATABASE" . DBNameTest) === TRUE)
-        echo "Database" . DBNameTest . " dropped successfully";
+    if ($mysqli->query("DROP DATABASE " . DBNameTest) === TRUE)
+        echo "Database " . DBNameTest . " dropped successfully";
     else
         echo "Unable to drop database " . DBNameTest . ". ERROR: " . $mysqli->error;
 }
