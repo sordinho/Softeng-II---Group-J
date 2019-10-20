@@ -86,7 +86,7 @@ function user_login($post_data)
     if ($userinfo["serviceID"] != -1) {// admin has a -1 value on serviceID field
         // Get also the first ticket that need to be served
         $ticket_info = get_next($userinfo["serviceID"]);
-        print_r($ticket_info);
+        //print_r($ticket_info);
         clerk_register_ticket($ticket_info);
         set_serviceID($userinfo["serviceID"]);
         //print_r(clerk_get_cur_ticket());
@@ -339,7 +339,7 @@ function get_clerk_side_content()
     $clerk_side_content = '
             
             <section class="component-nstats">
-                <div class="nstats">
+                <div class="nstats2">
                     <div class="networks">
                         <div class="network uptime">
                             <p class="title">Service no.</p>
