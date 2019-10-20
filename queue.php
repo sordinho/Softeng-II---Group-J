@@ -132,7 +132,7 @@ function get_next($serviceID) {
              * from a partial window that displays all the serviceID queues given $count
              * and in the end it limits the result at 1 to only get a single ticket
              */
-            $query2 = "select id, serviceID, ticketNumber ticketN, timestamp from Queue where ticketNumber in (select min(ticketNumber) from Queue where serviceID in (select serviceID from Queue group by ServiceID having count(*)=$count) group by serviceID) order by timestamp asc limit 1";
+            $query2 = "select ID, ServiceID AS serviceID, ticketNumber ticketN, Timestamp AS timestamp from Queue where ticketNumber in (select min(ticketNumber) from Queue where serviceID in (select serviceID from Queue group by ServiceID having count(*)=$count) group by serviceID) order by timestamp asc limit 1";
             if ($result2 = $conn->query($query2)) {
                 if ($result2->num_rows === 1) {
                     $ticket_info = $result2->fetch_assoc();
