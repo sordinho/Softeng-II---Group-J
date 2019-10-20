@@ -2,9 +2,18 @@
 require_once('config.php');
 require_once('functions.php');
 require_once('user.php');
-
+/**
+ *
+ * @param $service_name
+ * @return array|bool
+ */
 
 // Queue ticket handler
+/**
+ * Richiede l'uso di dummy ticket
+ * @param $service_name
+ * @return array struttura ticket info
+ */
 function add_top($service_name){
             // Do an insert and get back the info about the generated number
             $mysqli = connectMySQL(); 
@@ -39,6 +48,16 @@ function add_top($service_name){
     }
 
 // Add a dummy ticket. This will be called when, for a given service, there are no more records in the Queue table.
+/**
+ * Add a dummy ticket. This will be called when, for a given service, there are no more records in the Queue table.
+ * E' un biglietto fittizio finalizzato alla inizializzazione
+ * deve essere automaticamente richiamato nel caso in cui la coda è vuota
+ * e viene eliminato quando viene servito il primo utente reale
+ *
+ * Il valore 0 è un valore che non corrisponde a nessun ticket
+ * @param $service_id
+ * @return array struttura ticket info
+ */
 function add_dummy_ticket($service_id){
     // Do an insert and get back the info about the generated number
     $mysqli = connectMySQL(); 
@@ -71,6 +90,11 @@ function add_dummy_ticket($service_id){
         return $ticket_info;
     }
 }
+
+/**
+ * @param $service_name
+ * @return ticket number più basso
+ */
 function get_bottom($service_name){
         $conn = connectMySQL(); 
         $sql = "SELECT MIN(TicketNumber) as TicketN FROM Queue JOIN Service ON ServiceID = Service.ID WHERE Service.Name = '$service_name'";
@@ -85,22 +109,20 @@ function get_bottom($service_name){
             printf("Error message: %s\n", $conn->error);
         }
 }
-// Not used for now
-function get_bottom_ticket_by_id($service_id){
-    $conn = connectMySQL(); 
-    $service_id = intval($service_id);
-    $sql = "SELECT ID, ServiceID, TicketNumber AS ticketN, Timestamp AS timestamp FROM Queue WHERE TicketNumber IN (select MIN(TicketNumber) FROM Queue WHERE ServiceID=$service_id) AND ServiceID=$service_id";
-    $ticket_info = array();
-    if ($result = $conn->query($sql)) {
-        if ($result->num_rows === 1) {
-            $ticket_info = $result->fetch_assoc();
-        }
-    } else {
-        printf("Error message: %s\n", $conn->error);
-    }
-    return $ticket_info; 
-}
 
+/**
+ * Se il service ID = 0 => serve tutti i servizi
+ * > Calcola la coda con più gente in coda
+ * > Nel caso di due code con la stessa lunghezza sceglie quelli
+ *   con il ticket di valore minore e si ordina in base al timestamp e di questi si prende quelli con timestamp più antico
+ * > Il caso della non esistenza delle code non è gestito per la presenza del dummy ticket
+ * Se il serviceID != -1 (il -1 rappresenta l'admin)
+ *
+ *
+ * il controllo sul -1 è una doppia sicurezza
+ * @param $serviceID
+ * @return array|null
+ */
 function get_next($serviceID) {
 
     if ($serviceID == 0) {
@@ -171,6 +193,12 @@ function get_next($serviceID) {
 
 }
 
+/**
+ * Elimina il ticket
+ * @param $serviceID
+ * @param $ticketN
+ * @return true or false se avviene o meno
+ */
 function delete_ticket($serviceID, $ticketN) {
     /*
      * delete one ticket for the specified serviceID, ticketnum
@@ -189,6 +217,12 @@ function delete_ticket($serviceID, $ticketN) {
     }
 }
 
+/**
+ * Aggiorna le statistiche in autentication e service
+ * Si incrementano i clienti serviti
+ * @param $serviceID
+ * @return bool
+ */
 function update_stats($serviceID) {
     /*
      * update both Authentication and Service table
@@ -228,7 +262,10 @@ function get_length_by_service_id($service_id){
     return $queue["counter"];
 }
 
-function get_totatal_service_num(){
+/**
+ * @return numero di servizi esistenti
+ */
+function get_total_service_num(){
     // Create connection
     $conn = connectMySQL();
     $side_content = '<p class="tally"></p>';
@@ -242,7 +279,10 @@ function get_totatal_service_num(){
     return $side_content;
 }
 
-function get_totatal_lenght(){
+/**
+ * @return numero di persone in attesa su tutti i servizi
+ */
+function get_total_lenght(){
     $conn = connectMySQL();
     $paragraph_content = '<p class="tally"></p>';
     $sql = "SELECT COUNT(*) as n FROM Queue";
@@ -255,6 +295,7 @@ function get_totatal_lenght(){
     }
     return $paragraph_content;
 }
+
 function get_currently_served_ticket_by($service_name){
     return get_bottom($service_name);
 }

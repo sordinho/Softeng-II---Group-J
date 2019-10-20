@@ -25,7 +25,8 @@ class TestCustomer extends TestCase
         customer_register_ticket($ticket_info);
         $this->assertEquals(10,$_SESSION['ticketN'],"TestCustomer: test_customer_register_ticket error in value of ticketN");
         $this->assertEquals('test',$_SESSION['service'],"TestCustomer: test_customer_register_ticket error in value of service");
-        $this->assertEquals(1,$_SESSION['serviceID'],"TestCustomer: test_customer_register_ticket error in value of service");
+        $this->assertEquals(1,$_SESSION['serviceID'],"TestCustomer: test_customer_register_ticket error in value of serviceID");
+        $this->assertTrue($_SESSION['pendingTicket'],"TestCustomer: test_customer_register_ticket error in value pendingTicket");
     }
     public function test_customer_register_timestamp(){
         $timestamp = mktime(11,00,00,10,17,2019);
@@ -40,9 +41,9 @@ class TestCustomer extends TestCase
         $this->assertEquals($timestamp,customer_get_timestamp());
     }
     public function test_has_pending_ticket(){
-        unset($_SESSION['ticketN']);
+        unset($_SESSION['pendingTicket']);
         $this->assertEquals(false,has_pending_ticket(),"TestCustomer: test_has_pending_ticket error, session value should not be set");
-        $_SESSION['ticketN'] = 100;
+        $_SESSION['pendingTicket'] = true;
         $this->assertEquals(100,has_pending_ticket(),"TestCustomer: test_has_pending_ticket error, session value should be set");
     }
     public function test_get_ticketn(){
@@ -60,14 +61,18 @@ class TestCustomer extends TestCase
         $this->assertEquals(11,$res['ticketN'],"TestCustomer: test_get_ticket error: wrong returned [ticketn] value");
         $this->assertEquals('test',$res['service'],"TestCustomer: test_get_ticket error: wrong returned [service] value");
     }
-    /*public function test_get_distance_from_top(){
+    public function test_get_distance_from_top(){
         //todo
-        $_SESSION['ticketN']=3;
+        $_SESSION['ticketN']=1;
         $_SESSION['service']="test";
         $_SESSION['serviceID']=1;
         $dist = get_distance_from_top();
-        $this->assertEquals(3,$dist);
-    }*/
+        $this->assertEquals(1,$dist);
+        $_SESSION['ticketN'] = 0;
+        $_SESSION['serviceID'] = 2;
+        $dist = get_distance_from_top();
+        $this->assertEquals(0,$dist);
+    }
 
     /*public function test_get_ticket_html(){
         //todo when the method is complete

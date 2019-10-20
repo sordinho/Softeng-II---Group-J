@@ -4,11 +4,14 @@ require_once '..\functions.php';
 
 class TestFunction extends TestCase
 {
+
     /*public function test_connectMySql(){
         $myqli = connectMySQL();
         $this->assertNotNull($myqli,"TestFunction: test_connectMySQL returned value should not be null");
     }*/
-    //todo:test boundary conditions on timestamp
+
+    //TODO: see testUtility for functions like connectMySQL for test DB and other utilities
+
     public function test_timestamp_to_date(){
         $timestamp = mktime(11,00,00,10,17,2019);
         $res = timestamp_to_date($timestamp);
