@@ -1,6 +1,8 @@
 <?php
 use \PHPUnit\Framework\TestCase;
 require_once '..\queue.php';
+require_once 'testConfig.php';
+require_once 'testUtility.php';
 
 class TestQueue extends TestCase
 {
@@ -9,34 +11,8 @@ class TestQueue extends TestCase
      */
 
     protected function setUp():void {
-        /*
-        $mysqli = connectMySQL();
-        $sql1 = 'INSERT INTO Queue(ServiceID, TicketNumber) VALUES (1, 0)';
-        $sql2 = 'INSERT INTO Queue(ServiceID, TicketNumber) VALUES (2, 0)';
-
-        $query1 = $mysqli->query($sql1);
-        $query2 = $mysqli->query($sql2);
-        $mysqli->close();
-        */
-        return;
+        createTestDatabase();
     }
-
-
-    /*
-     *     if(!is_admin())
-        return false;
-    $conn = connectMySQL();
-    // Query for adding new service to service table
-    $addService = "INSERT INTO Service(Name,Counter) VALUES (?,0)";
-    $query = $conn->prepare($addService);
-    if(!$query)
-        return false;
-    $query->bind_param('s', $new_service_to_add);
-    $res = $query->execute();
-    return $res;
-    }
- */
-
 
     public function get_top($service_name){
         $conn = connectMySQL();
@@ -85,17 +61,26 @@ class TestQueue extends TestCase
             printf("Error message: %s\n", $conn->error);
         }
 
-        $this->assertFalse($num_after == $num_before + 1, "TestQueue : test_add_dummmy_ticket insertion non performed correctly or not performed");
+        $this->assertFalse($num_after == $num_before + 1, "TestQueue : test_add_dummy_ticket insertion not performed correctly or not performed");
     }
 
     public function test_add_top() {
         // perform insertion of one value
-        add_dummy_ticket(6);
+        $chosen_service = "Packages";
+        //packages = 1
+        add_dummy_ticket(1);
         // select for max
+        $max_before = $this->perform_SELECT_return_single_value(
+            "SELECT MAX(TicketNumber) FROM Queue WHERE ServiceID ='{1}'"
+        );
 
-        // perform add top
-        // select for max
-        //ver
+        add_top($chosen_service);
+
+        $max_after = $this->perform_SELECT_return_single_value(
+            "SELECT MAX(TicketNumber) FROM Queue WHERE ServiceID ='{1}'"
+        );
+
+        $this->assertTrue($max_after = $max_before + 1, "TestQueue: test_add_top not performed correctly or not performed");
     }
 
     protected function tearDown():void{

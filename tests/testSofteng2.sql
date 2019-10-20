@@ -7,6 +7,8 @@
 -- Versione del server: 5.7.27-0ubuntu0.16.04.1
 -- Versione PHP: 7.0.33-0ubuntu0.16.04.6
 
+CREATE DATABASE IF NOT EXISTS testSofteng2;
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -17,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `softeng2`
+-- Database: `testSofteng2`
 --
 
 -- --------------------------------------------------------
