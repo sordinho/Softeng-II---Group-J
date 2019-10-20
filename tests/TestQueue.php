@@ -61,7 +61,7 @@ class TestQueue extends TestCase
             printf("Error message: %s\n", $conn->error);
         }
 
-        $this->assertFalse($num_after == $num_before + 1, "TestQueue : test_add_dummy_ticket insertion not performed correctly or not performed");
+        $this->assertTrue($num_after == $num_before + 1, "TestQueue : test_add_dummy_ticket insertion not performed correctly or not performed");
     }
 
     public function test_add_top() {
@@ -80,10 +80,14 @@ class TestQueue extends TestCase
             "SELECT MAX(TicketNumber) FROM Queue WHERE ServiceID ='{1}'"
         );
 
-        $this->assertTrue($max_after = $max_before + 1, "TestQueue: test_add_top not performed correctly or not performed");
+        $this->assertTrue($max_after == $max_before + 1, "TestQueue: test_add_top not performed correctly or not performed");
+    }
+
+    public function test_get_bottom(){
+
     }
 
     protected function tearDown():void{
-
+        dropTestDatabase();
     }
 }
