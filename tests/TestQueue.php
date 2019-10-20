@@ -8,7 +8,7 @@ class TestQueue extends TestCase
      * Funzioni di supporto al testing
      */
 
-    protected function setUp() {
+    protected function setUp():void {
         /*
         $mysqli = connectMySQL();
         $sql1 = 'INSERT INTO Queue(ServiceID, TicketNumber) VALUES (1, 0)';
@@ -18,6 +18,7 @@ class TestQueue extends TestCase
         $query2 = $mysqli->query($sql2);
         $mysqli->close();
         */
+        return;
     }
 
 
@@ -37,7 +38,7 @@ class TestQueue extends TestCase
  */
 
 
-    function get_top($service_name){
+    public function get_top($service_name){
         $conn = connectMySQL();
         $sql = "SELECT MAX(TicketNumber) as TicketN FROM Queue JOIN Service ON ServiceID = Service.ID WHERE Service.Name = '$service_name'";
         if ($result = $conn->query($sql)) {
@@ -57,7 +58,7 @@ class TestQueue extends TestCase
      */
 
     // this function is supposed to add a ticket
-    function test_add_dummy_ticket() {
+    public function test_add_dummy_ticket() {
         $sql = "SELECT COUNT(*) AS Num FROM Queue WHERE ServiceID = 5 AND TicketNumber = 0";
         $conn = connectMySQL();
 
@@ -87,7 +88,7 @@ class TestQueue extends TestCase
         $this->assertFalse($num_after == $num_before + 1, "TestQueue : test_add_dummmy_ticket insertion non performed correctly or not performed");
     }
 
-    function test_add_top() {
+    public function test_add_top() {
         // perform insertion of one value
         add_dummy_ticket(6);
         // select for max
@@ -97,7 +98,7 @@ class TestQueue extends TestCase
         //ver
     }
 
-    function tearDown(){
+    protected function tearDown():void{
 
     }
 }

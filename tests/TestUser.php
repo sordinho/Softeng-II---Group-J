@@ -49,11 +49,6 @@ function set_front_office($front_office)
     }
     */
 
-/*// Memorizza nelle sessioni anche il nome dell'utente
-function set_name($name)
-{
-    $_SESSION['name'] = ucfirst($name);
-}*/
     public function test_set_name(){
         $name = "test";
         set_name($name);
@@ -124,33 +119,60 @@ function set_name($name)
         $_SESSION['serviceID'] = null;
         $this->assertEquals(false,get_serviceID(),"TestUser : test_get_serviceID_BOUNDARY wrong returned value");
     }
-/*function get_usergroup()
-{
-    return isset($_SESSION['usergroup']) ? $_SESSION['usergroup'] : '';
-}
 
-function clerk_register_ticket($ticket_info){
+    public function test_get_usergroup(){
+        $_SESSION['usergroup'] =  'test';
+        $this->assertEquals("test",get_usergroup(),"TestUser : test_get_usergroup wrong returned value");
+    }
 
-    $_SESSION['ticketN'] = $ticket_info["ticketN"];
-    //$_SESSION['service'] = $ticket_info["service"];
-    $_SESSION['serviceID'] = $ticket_info["serviceID"];
-    $_SESSION['timestamp'] = $ticket_info["timestamp"];
-}
+    public function test_get_usergroup_BOUNDARY(){
+        $_SESSION['usergroup'] = "";
+        $this->assertEquals("", get_usergroup(),"TestUser : test_get_usergroup_BOUNDARY wrong returned value");
+        $_SESSION['usergroup'] = null;
+        $this->assertEquals("", get_usergroup(),"TestUser : test_get_usergroup_BOUNDARY wrong returned value");
+    }
 
-function clerk_get_cur_ticket(){
-    $ticket_info["ticketN"] = $_SESSION['ticketN'];
-    //$ticket_info["service"] = $_SESSION['service'];
-    $ticket_info["serviceID"] = $_SESSION['serviceID'];
-    $ticket_info["timestamp"] = $_SESSION['timestamp'];
-    return $ticket_info;
-}
+    public function test_clerk_register_ticket(){
+        $ticket_info = array();
+        $ticket_info['ticketN'] = 1;
+        $ticket_info['serviceID']= 1;
+        $timestamp = mktime(11,00,00,10,17,2019);
+        $ticket_info['timestamp'] = $timestamp;
+        clerk_register_ticket($ticket_info);
+        $this->assertEquals(1,$_SESSION['ticketN'],"TestUser : test_clerk_register_ticket wrong value for session[ticketN]");
+        $this->assertEquals(1,$_SESSION['serviceID'],"TestUser : test_clerk_register_ticket wrong value for session[serviceID]");
+        $this->assertEquals($timestamp,$_SESSION['timestamp'],"TestUser : test_clerk_register_ticket wrong value for session[timestamp]");
+    }
 
-function get_clerk_content()
-{
-    //<a class="btn btn-primary" href="#" role="button">Link</a>
-    if (!is_clerk())
-        return false;
-    $content = '
+    public function test_clerk_register_ticket_BOUNDARY(){
+        $ticket_info = array();
+        $this->assertFalse(clerk_register_ticket($ticket_info),"TestUser: test_clerk_register_ticket_BOUNDARY it shouldn't be possible to set empty values");
+        $ticket_info['ticketN'] = 10;
+        $this->assertFalse((clerk_register_ticket($ticket_info)),"TestUser: test_clerk_register_ticket_BOUNDARY it shouldn't be possible to set empty values");
+        $timestamp = mktime(11,00,00,10,17,2019);
+        $ticket_info['timestamp'] = $timestamp;
+        $this->assertFalse(clerk_register_ticket($ticket_info),"TestUser: test_clerk_register_ticket_BOUNDARY it shouldn't be possible to set empty values");
+        unset($ticket_info['ticketN']);
+        $ticket_info['serviceID'] = 1;
+        $this->assertFalse(clerk_register_ticket($ticket_info),"TestUser: test_clerk_register_ticket_BOUNDARY it shouldn't be possible to set empty values");
+        $ticket_info['ticketN'] = "testWrong";
+        $this->assertFalse(clerk_register_ticket($ticket_info),"TestUser: test_clerk_register_ticket_BOUNDARY it shouldn't be possible to set non numerical values for ticketN");
+
+    }
+    public function test_clerk_get_our_ticket(){
+        $_SESSION['ticketN'] = 1;
+        $_SESSION['serviceID'] = 1;
+        $timestamp = mktime(11,00,00,10,17,2019);
+        $_SESSION['timestamp'] = $timestamp;
+        $actual = clerk_get_cur_ticket();
+        $this->assertEquals(1,$actual['ticketN'],"TestUser : test_clerk_get_our_ticket wrong returned value");
+        $this->assertEquals(1,$actual['serviceID'],"TestUser : test_clerk_get_our_ticket wrong returned value");
+        $this->assertEquals($timestamp,$actual['timestamp'],"TestUser : test_clerk_get_our_ticket wrong returned value");
+    }
+    public function test_get_clerk_content(){
+        $_SESSION['usergroup'] = "notClerk";
+        $this->assertFalse(get_clerk_content(),"TestUser : test_get_clerk_content should have returned false, session[usergroup] is not clerk");
+        $expected = '
     <!-- The container  -->
     <div class="container">
         <div class="wrapper">
@@ -160,70 +182,157 @@ function get_clerk_content()
             <a class="btn btn-primary" href="./clerkAction.php?action=nextTicket"role="button">Next customer</a>
         </div>
     </div>';
-    return $content;
-}
+        $_SESSION['usergroup'] = 'Clerk';
+        $this->assertEquals($expected,get_clerk_content(),"TestUser : test_get_clerk_content wrong returned value");
+    }
 
-function get_clerk_side_content()
-{
-    $clerk_side_content = '
-
+    public function test_get_clerk_side_content(){
+        $_SESSION['usergroup'] = "notClerk";
+        $this->assertFalse(get_clerk_side_content(),"TestUser : test_get_side_clerk_content should have returned false, session[usergroup] is not clerk");
+        $_SESSION['usergroup'] = 'Clerk';
+        $_SESSION['serviceID'] = 1;
+        $_SESSION['ticketN'] = 1;
+        $timestamp = mktime(11,00,00,10,17,2019);
+        $_SESSION['timestamp'] = $timestamp;
+        $res = '
+            
             <section class="component-nstats">
                 <div class="nstats">
                     <div class="networks">
                         <div class="network uptime">
-                            <p class="title">Front office no.</p>
-                            <p class="tally">' . $_SESSION['serviceID'] . '</p>
+                            <p class="title">Service no.</p>
+                            <p class="tally">1</p>
+                            <p class="unit">Packages</p>
+                        </div>
+                        
+                        <div class="network actions">
+                            <p class="title"></p>
+                            <p class="tally"></p>
+                            <p class="unit"></p>
+                        </div>
+                        <div class="network actions">
+                            <p class="title"></p>
+                            <p class="tally"></p>
+                            <p class="unit"></p>
+                        </div>
+                        
+                        <div class="network user">
+                            <p class="title">Ticket no.</p>
+                            <p class="tally">1</p>
+                            <p class="unit">Serving</p>
+                        </div>
+                         <div class="ui-horizontal-lines"></div>
+                    </div>
+                </div>
+            </section>
+        ';
+        $this->assertEquals($res,get_clerk_side_content(),"TestUser : test_get_clerk_side_content wrong returned value");
+        $_SESSION['serviceID'] = 2;
+        $res = '
+            
+            <section class="component-nstats">
+                <div class="nstats">
+                    <div class="networks">
+                        <div class="network uptime">
+                            <p class="title">Service no.</p>
+                            <p class="tally">2</p>
+                            <p class="unit">Accounts</p>
+                        </div>
+                        
+                        <div class="network actions">
+                            <p class="title"></p>
+                            <p class="tally"></p>
+                            <p class="unit"></p>
+                        </div>
+                        <div class="network actions">
+                            <p class="title"></p>
+                            <p class="tally"></p>
+                            <p class="unit"></p>
+                        </div>
+                        
+                        <div class="network user">
+                            <p class="title">Ticket no.</p>
+                            <p class="tally">1</p>
+                            <p class="unit">Serving</p>
+                        </div>
+                         <div class="ui-horizontal-lines"></div>
+                    </div>
+                </div>
+            </section>
+        ';
+        $this->assertEquals($res,get_clerk_side_content(),"TestUser : test_get_clerk_side_content wrong returned value");
+        $_SESSION['serviceID'] = 0;
+        $res = '
+            
+            <section class="component-nstats">
+                <div class="nstats">
+                    <div class="networks">
+                        <div class="network uptime">
+                            <p class="title">Service no.</p>
+                            <p class="tally">0</p>
                             <p class="unit">Packages / Accounts</p>
                         </div>
-
-
+                        
+                        <div class="network actions">
+                            <p class="title"></p>
+                            <p class="tally"></p>
+                            <p class="unit"></p>
+                        </div>
+                        <div class="network actions">
+                            <p class="title"></p>
+                            <p class="tally"></p>
+                            <p class="unit"></p>
+                        </div>
+                        
+                        <div class="network user">
+                            <p class="title">Ticket no.</p>
+                            <p class="tally">1</p>
+                            <p class="unit">Serving</p>
+                        </div>
+                         <div class="ui-horizontal-lines"></div>
                     </div>
-
-
                 </div>
-</section>
+            </section>
         ';
+        $this->assertEquals($res,get_clerk_side_content(),"TestUser : test_get_clerk_side_content wrong returned value");
+    }
 
-    return $clerk_side_content;
-}
+    public function test_get_admin_content(){
+        $_SESSION['usergroup']='notAdmin';
+        $this->assertFalse(get_admin_content(),"TestUser : test_get_admin_content function should have returned false");
 
-function get_admin_content()
-{
-    if (!is_admin())
-        return false;
-
-    $content = '
-      <!-- The container  -->
-      <div class="container">
+        $_SESSION['usergroup']='Admin';
+        $expected = '
+    <!-- The container  -->
+    <div class="container">
         <div class="wrapper">
-          <br/>
-          <h1>Register a new service</h1>
-          <p class="lead">Insert the name and select to wich counter assign it.<br></p>
-          <form action="./admin.php?action=newService" method="POST">
-          <div class="form-group">
-              <label for="exampleFormControlSelect2">New Service</label>
-              <input name="newService" class="form-control" id="newService">
-          </div>
-          <button type="submit" class="btn btn-primary">Register</button>
+            <br/>
+            <h1>Register a new service</h1>
+            <p class="lead">Insert the name and select to wich counter assign it.<br></p>
+            <form action="./admin.php?action=newService" method="POST">
+            <div class="form-group">
+                <label for="exampleFormControlSelect2">New Service</label>
+                <input name="newService" class="form-control" id="newService">                         
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
         </form>
-      </div>
-      </div>';
+        </div>
+    </div>';
+        $this->assertEquals($expected,get_admin_content(),"TestUser : test_get_admin_content wrong returned value");
+    }
+    /*function get_admin_side_content()
+    {//todo
+        $admin_side_content = get_side_content_as_html();
+        return $admin_side_content;
 
-    return $content;
-}
+    }*/
+    public function test_is_email(){
+        $email = "not an email";
+        $res = is_email($email);
+        $this->assertEquals(0,$res,"TestUser : test_is_email input value was not an email");
 
-function get_admin_side_content()
-{
-    $admin_side_content = get_side_content_as_html();
-    return $admin_side_content;
-
-}
-
-// Check functions
-function is_email($email)
-{
-    $regex = '/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/';
-    return preg_match($regex, $email);
-}
-*/
+        $email = "test@email.com";
+        $res = is_email($email);
+        $this->assertEquals(1,$res,"TestUser : test_is_email input value was an email");
+    }
 }

@@ -280,8 +280,14 @@ function get_usergroup()
 /**
  * @param $ticket_info
  */
-function clerk_register_ticket($ticket_info)
-{
+function clerk_register_ticket($ticket_info){
+    $condition = !isset($ticket_info['ticketN']) ||
+                !isset($ticket_info['serviceID']) ||
+                !isset($ticket_info['timestamp']) ||
+                !is_numeric($ticket_info['ticketN']);
+
+    if($condition)
+        return false;
 
     $_SESSION['ticketN'] = $ticket_info["ticketN"];
     //$_SESSION['service'] = $ticket_info["service"];
@@ -327,6 +333,8 @@ function get_clerk_content()
  */
 function get_clerk_side_content()
 {
+    if (!is_clerk())
+        return false;
     if (get_serviceID() == '1')
         $offeredService = 'Packages';
     elseif (get_serviceID() == '2')
@@ -421,4 +429,3 @@ function is_email($email)
     return preg_match($regex, $email);
 }
 
-?>
