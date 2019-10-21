@@ -3,7 +3,7 @@ require_once("config.php");
 require_once("functions.php");
 require_once("user.php");
 
-if( !isset( $_POST['front_office'])  && isset($_GET["front_office"])) { 
+if( !isset( $_POST['front_office'])  && isset($_GET["front_office"])) {
     $content = <<< EOT
     <div class="alert alert-success" role="alert">
         You just created a clerk account!<br>In a few seconds you will be redirected to home. If you are in a hurry <a href="./index.php" class="alert-link">just click here!</a>

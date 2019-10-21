@@ -4,7 +4,6 @@ require_once('functions.php');
 require_once('user.php');
 
 
-
 // Register a new service into the DB
 if ($_GET['action'] == "newService" && isset($_POST['newService'])) {
 //    echo "<pre>".print_r($_POST,TRUE)."</pre>";
@@ -27,6 +26,6 @@ EOT;
     </div> 
     <meta http-equiv='refresh' content='3; url=./index.php' />
 EOT;
-    
+
     render_page($content, '');
 }

@@ -5,21 +5,20 @@ require_once("customer.php");
 
 // Handle hidden menu and navbar render (note that is related to the user status (loggedin/typeOfUser))
 $hidden_menu = "";
-if(!is_logged() && !has_pending_ticket()) {
-	$navbar_edit = '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myModal"> Login </a></li>';
+if (!is_logged() && !has_pending_ticket()) {
+    $navbar_edit = '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myModal"> Login </a></li>';
 
-}
-else{
-	$navbar_edit = '
+} else {
+    $navbar_edit = '
 		<li class="nav-item">
 			<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Login</a>
 		</li>
 		';
-    $navbar_edit .= '<li class="nav-item"><a class="nav-link" href="'.PLATFORM_PATH.'logout.php"> Logout </a></li>';
+    $navbar_edit .= '<li class="nav-item"><a class="nav-link" href="' . PLATFORM_PATH . 'logout.php"> Logout </a></li>';
 }
-if(is_admin()){
-	//$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#registerModal"> Register new clerk</a></li>';
-	//$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#newServiceModal"> Register new service</a></li>';
+if (is_admin()) {
+    //$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#registerModal"> Register new clerk</a></li>';
+    //$navbar_edit .= '<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#newServiceModal"> Register new service</a></li>';
     $hidden_menu .= '
 	<li class="nav-item dropdown">
 		<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin actions</a>
@@ -29,9 +28,8 @@ if(is_admin()){
 		</div>
 	</li>
 ';
-}
-elseif(is_logged()){// if not admin and logged => clerk
-	$hidden_menu .= '
+} elseif (is_logged()) {// if not admin and logged => clerk
+    $hidden_menu .= '
 	<li class="nav-item dropdown">
 		<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Clerk actions</a>
 		<div class="dropdown-menu" aria-labelledby="dropdown01">
@@ -72,10 +70,10 @@ print '<!DOCTYPE html>
 	<div class="collapse navbar-collapse" id="navbarsExampleDefault">
 		<ul class="navbar-nav mr-auto">
 		<li class="nav-item active">
-			<a class="nav-link" href="'.PLATFORM_PATH.'">Home <span class="sr-only">(current)</span></a>
+			<a class="nav-link" href="' . PLATFORM_PATH . '">Home <span class="sr-only">(current)</span></a>
 		</li>
-		'.$navbar_edit
-		.$hidden_menu.'
+		' . $navbar_edit
+    . $hidden_menu . '
 		</ul>
 		<form class="form-inline my-2 my-lg-0">
 		<input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
@@ -91,7 +89,7 @@ echo '<!-- Modal Login -->
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-body" style="padding:40px 50px;">
-						<form role="form" method="POST" action="'.PLATFORM_PATH.'index.php">
+						<form role="form" method="POST" action="' . PLATFORM_PATH . 'index.php">
 						<div class="form-group">
 							<label for="front_office"><span class="glyphicon glyphicon-user"></span> front_office</label>
 							<input type="text" class="form-control" name="front_office" id="front_office" placeholder="Enter front_office">

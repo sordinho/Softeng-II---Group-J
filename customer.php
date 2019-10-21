@@ -18,11 +18,11 @@ Note that, when a ticket is generated and so an INSERT in the Queue table is don
 // Customer ticket handler
 
 /**
+ * Save ticket info in session
  * @param $ticket_info
  * @return bool
  */
-function customer_register_ticket($ticket_info)
-{
+function customer_register_ticket($ticket_info) {
     $condition = !isset($ticket_info['ticketN']) || !isset($ticket_info['service'])
         || !isset($ticket_info['serviceID']) || !is_numeric($ticket_info['ticketN'])
         || !is_numeric($ticket_info['serviceID']);
@@ -37,24 +37,21 @@ function customer_register_ticket($ticket_info)
 /**
  * @param $timestamp
  */
-function customer_register_timestamp($timestamp)
-{
+function customer_register_timestamp($timestamp) {
     $_SESSION['timestamp'] = $timestamp;
 }
 
 /**
  * @return bool|mixed
  */
-function customer_get_timestamp()
-{
+function customer_get_timestamp() {
     return isset($_SESSION['timestamp']) ? $_SESSION['timestamp'] : false;
 }
 
 /**
  * @return bool|mixed
  */
-function has_pending_ticket()
-{
+function has_pending_ticket() {
     //return true;//TODO: remove or comment after testing
     return isset($_SESSION['pendingTicket']) ? $_SESSION['pendingTicket'] : false;
 }
@@ -62,8 +59,7 @@ function has_pending_ticket()
 /**
  * @return bool|mixed
  */
-function get_ticketn()
-{
+function get_ticketn() {
     if (!isset($_SESSION['ticketN']))
         return false;
     return $_SESSION['ticketN'];
@@ -72,8 +68,7 @@ function get_ticketn()
 /**
  * @return mixed
  */
-function get_ticket()
-{
+function get_ticket() {
     $ticket_info["ticketN"] = $_SESSION['ticketN'];
     $ticket_info["service"] = $_SESSION['service'];
     $ticket_info["serviceID"] = $_SESSION['serviceID'];
@@ -81,10 +76,10 @@ function get_ticket()
 }
 
 /**
+ * Get number of customer before the given ticket number
  * @return mixed
  */
-function get_distance_from_top()
-{
+function get_distance_from_top() {
     $ticket_info = get_ticket();
 
     $mysqli = connectMySQL();
@@ -102,12 +97,12 @@ function get_distance_from_top()
 }
 
 /**
+ * Get HTML code for a ticket. Lot of information are in SESSION
  * @return string
  */
-function get_ticket_html()
-{
+function get_ticket_html() {
     $ticket_info = get_ticket();
-    $format_ticket = $ticket_info["service"][0];
+    $format_ticket = $ticket_info["service"][0]; // get first letter of the service
     $format_ticket .= sprintf("%03d", $ticket_info["ticketN"]);
     $cur_ticket = get_currently_served_ticket_by($ticket_info["service"]);
     $format_cur_ticket = sprintf("%03d", $cur_ticket);
@@ -140,13 +135,13 @@ function get_ticket_html()
         </li>
     </ul>
     </div>';
-    $metarefresh = '<meta http-equiv="refresh" content="8">';
+    $metarefresh = '<meta http-equiv="refresh" content="8">'; // refresh every 8 sec
 
-    if ($cur_ticket > $ticket_info["ticketN"]) {// The user was already served, delete all and reset his ticket
+    if ($cur_ticket > $ticket_info["ticketN"]) {// The user was already served, delete all and reset his ticket session destroyed
         session_unset();
         session_destroy();
         setcookie(session_name(), '', time() - 42000, '/');
-    } elseif ($cur_ticket == $ticket_info["ticketN"]) {
+    } elseif ($cur_ticket == $ticket_info["ticketN"]) { // Show message when is your turn
         $metarefresh .= '<div class="alert alert-success" role="alert">
         It\'s your turn!<br>
     </div> ';

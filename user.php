@@ -18,8 +18,7 @@ There are 2 type if user(a customer is not considered as *user* in this context)
  * @param $front_office
  * @return array
  */
-function get_user_data($front_office)
-{
+function get_user_data($front_office) {
     $conn = connectMySQL();
     $sql = "SELECT * FROM Authentication WHERE FrontOffice= '{$front_office}'";
     $userinfo = array();
@@ -44,8 +43,7 @@ function get_user_data($front_office)
  * @param $post_data
  * @return bool
  */
-function user_login($post_data)
-{
+function user_login($post_data) {
     $front_office = $post_data["front_office"];
     $password = $post_data["password"];
     $success = false;
@@ -105,8 +103,7 @@ function user_login($post_data)
  * @param $password
  * @return bool
  */
-function register($front_office, $password)
-{
+function register($front_office, $password) {
     $success = false;
     // TODO: eventually edit with has_permission() (related to admin capabilities to add clerk)
     if (!is_admin()) {
@@ -150,8 +147,7 @@ function register($front_office, $password)
  * @param $new_service_to_add
  * @return bool false on failure
  */
-function add_new_service($new_service_to_add)
-{
+function add_new_service($new_service_to_add) {
     if (!is_admin())
         return false;
     $conn = connectMySQL();
@@ -173,24 +169,21 @@ function add_new_service($new_service_to_add)
 /**
  * @return bool
  */
-function is_logged()
-{
+function is_logged() {
     return isset($_SESSION['front_office']);
 }
 
 /**
  * @return bool
  */
-function is_admin()
-{//TODO: test
+function is_admin() {//TODO: test
     return isset($_SESSION['usergroup']) ? $_SESSION['usergroup'] == "Admin" : false;
 }
 
 /**
  * @return bool
  */
-function is_clerk()
-{//TODO: test
+function is_clerk() {//TODO: test
     return isset($_SESSION['usergroup']) ? $_SESSION['usergroup'] == "Clerk" : false;
 }
 
@@ -199,8 +192,7 @@ function is_clerk()
  * @param $front_office
  * @return bool|void
  */
-function set_logged($front_office)
-{
+function set_logged($front_office) {
     if (!isset($front_office))
         return false;
     $_SESSION['front_office'] = $front_office;
@@ -211,8 +203,7 @@ function set_logged($front_office)
 /**
  * @param $front_office
  */
-function set_front_office($front_office)
-{
+function set_front_office($front_office) {
     $_SESSION['front_office'] = $front_office;
     return;
 }
@@ -222,8 +213,7 @@ function set_front_office($front_office)
  * @param $name
  * @return bool
  */
-function set_name($name)
-{
+function set_name($name) {
     if (!isset($name))
         return false;
     $_SESSION['name'] = ucfirst($name);
@@ -233,8 +223,7 @@ function set_name($name)
  * @param $serviceID
  * @return bool
  */
-function set_serviceID($serviceID)
-{
+function set_serviceID($serviceID) {
     if (!isset($serviceID))
         return false;
     $_SESSION['serviceID'] = $serviceID;
@@ -244,8 +233,7 @@ function set_serviceID($serviceID)
  * @param $usergroup
  * @return bool
  */
-function set_usergroup($usergroup)
-{
+function set_usergroup($usergroup) {
     if (!isset($usergroup))
         return false;
     $_SESSION['usergroup'] = $usergroup;
@@ -255,32 +243,28 @@ function set_usergroup($usergroup)
 /**
  * @return mixed|string
  */
-function get_front_office()
-{
+function get_front_office() {
     return isset($_SESSION['front_office']) ? $_SESSION['front_office'] : '';
 }
 
 /**
  * @return mixed|string
  */
-function get_name()
-{
+function get_name() {
     return isset($_SESSION['name']) ? $_SESSION['name'] : '';
 }
 
 /**
  * @return bool|mixed
  */
-function get_serviceID()
-{
+function get_serviceID() {
     return isset($_SESSION['serviceID']) ? $_SESSION['serviceID'] : false;
 }
 
 /**
  * @return mixed|string
  */
-function get_usergroup()
-{
+function get_usergroup() {
     return isset($_SESSION['usergroup']) ? $_SESSION['usergroup'] : '';
 }
 
@@ -288,8 +272,7 @@ function get_usergroup()
  *
  * @param $ticket_info
  */
-function clerk_register_ticket($ticket_info)
-{
+function clerk_register_ticket($ticket_info) {
     $condition = !isset($ticket_info['ticketN']) ||
         !isset($ticket_info['serviceID']) ||
         !isset($ticket_info['timestamp']) ||
@@ -307,8 +290,7 @@ function clerk_register_ticket($ticket_info)
 /**
  * @return mixed
  */
-function clerk_get_cur_ticket()
-{
+function clerk_get_cur_ticket() {
     $ticket_info["ticketN"] = $_SESSION['ticketN'];
     //$ticket_info["service"] = $_SESSION['service'];
     $ticket_info["serviceID"] = $_SESSION['serviceID'];
@@ -321,8 +303,7 @@ function clerk_get_cur_ticket()
  * button for next customer
  * @return bool|string
  */
-function get_clerk_content()
-{
+function get_clerk_content() {
     //<a class="btn btn-primary" href="#" role="button">Link</a>
     if (!is_clerk())
         return false;
@@ -343,8 +324,7 @@ function get_clerk_content()
  * Get html code for making side content of clerk page
  * @return string
  */
-function get_clerk_side_content()
-{
+function get_clerk_side_content() {
     if (!is_clerk())
         return false;
     if (get_serviceID() == '1')
@@ -395,8 +375,7 @@ function get_clerk_side_content()
 /**
  * @return bool|string
  */
-function get_admin_content()
-{
+function get_admin_content() {
     if (!is_admin())
         return false;
 
@@ -423,8 +402,7 @@ function get_admin_content()
 /**
  * @return null
  */
-function get_admin_side_content()
-{
+function get_admin_side_content() {
     $admin_side_content = get_side_content_as_html();
     return $admin_side_content;
 
@@ -435,8 +413,7 @@ function get_admin_side_content()
  * @param $email
  * @return false|int
  */
-function is_email($email)
-{
+function is_email($email) {
     $regex = '/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/';
     return preg_match($regex, $email);
 }

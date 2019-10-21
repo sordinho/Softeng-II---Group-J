@@ -53,7 +53,7 @@ if (!isset($_SESSION['front_office']) && isset($_POST['front_office'])) {
     die();
 }
 
-$side_content=get_side_content_as_html();
+$side_content = get_side_content_as_html();
 
 if (is_admin()) {
     $content = get_admin_content();
@@ -79,7 +79,7 @@ elseif (has_pending_ticket()) {
           <form action="./ticketDispatcher.php?action=generateTicket" method="POST">
           <div class="form-group">
             <label for="exampleFormControlSelect2">Service</label>
-            <select name = "service" class="form-control" id="service">'.$service_list.'
+            <select name = "service" class="form-control" id="service">' . $service_list . '
             </select>
           </div>
           <button type="submit" class="btn btn-primary">Generate a ticket</button>
