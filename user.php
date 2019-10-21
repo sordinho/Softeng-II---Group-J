@@ -14,6 +14,7 @@ There are 2 type if user(a customer is not considered as *user* in this context)
         */
 
 /**
+ * Return information about logged in user (admin or clerk)
  * @param $front_office
  * @return array
  */
@@ -36,7 +37,10 @@ function get_user_data($front_office)
     }
 }
 
-/**
+/** Verify username and password for user to log in (admin or clerk)
+ *
+ * Service Id is set only for clerk
+ *
  * @param $post_data
  * @return bool
  */
@@ -95,7 +99,9 @@ function user_login($post_data)
 }
 
 /**
- * @param $front_office
+ * Register a new clerk
+ *
+ * @param $front_office : username for the new clerk
  * @param $password
  * @return bool
  */
@@ -137,11 +143,12 @@ function register($front_office, $password)
     }
 }
 
-// Get a service name that should be added as service in DB
-// return false on failure
 /**
+ * Get a service name that should be added as service in DB
+ * the new service is linked with the 3rd counter (the jolly one)
+ *
  * @param $new_service_to_add
- * @return bool
+ * @return bool false on failure
  */
 function add_new_service($new_service_to_add)
 {
@@ -278,15 +285,17 @@ function get_usergroup()
 }
 
 /**
+ *
  * @param $ticket_info
  */
-function clerk_register_ticket($ticket_info){
+function clerk_register_ticket($ticket_info)
+{
     $condition = !isset($ticket_info['ticketN']) ||
-                !isset($ticket_info['serviceID']) ||
-                !isset($ticket_info['timestamp']) ||
-                !is_numeric($ticket_info['ticketN']);
+        !isset($ticket_info['serviceID']) ||
+        !isset($ticket_info['timestamp']) ||
+        !is_numeric($ticket_info['ticketN']);
 
-    if($condition)
+    if ($condition)
         return false;
 
     $_SESSION['ticketN'] = $ticket_info["ticketN"];
@@ -308,6 +317,8 @@ function clerk_get_cur_ticket()
 }
 
 /**
+ * Get html code for making content of clerk page
+ * button for next customer
  * @return bool|string
  */
 function get_clerk_content()
@@ -329,6 +340,7 @@ function get_clerk_content()
 }
 
 /**
+ * Get html code for making side content of clerk page
  * @return string
  */
 function get_clerk_side_content()
@@ -368,7 +380,7 @@ function get_clerk_side_content()
                         
                         <div class="network user">
                             <p class="title">Ticket no.</p>
-                            <p class="tally">'.$servedUser.'</p>
+                            <p class="tally">' . $servedUser . '</p>
                             <p class="unit">Serving</p>
                         </div>
                          <div class="ui-horizontal-lines"></div>
