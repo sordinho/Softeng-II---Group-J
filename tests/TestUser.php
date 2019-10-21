@@ -1,10 +1,78 @@
 <?php
 
 require_once "..\user.php";
+require_once "testUtility.php";
 use PHPUnit\Framework\TestCase;
 
 class TestUser extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        createTestDatabase();
+    }
+    public static function tearDownAfterClass(): void
+    {
+        dropTestDatabase();
+    }
+
+    public function test_get_user_data(){
+        $expected_userinfo = array();
+        $expected_userinfo['usergroup'] = 'Clerk';
+        $expected_userinfo['front_office'] = 'frontoffice1';
+        $expected_userinfo['serviceID'] = 1;
+        $actual = get_user_data("frontoffice1");
+        $this->assertEquals($expected_userinfo,$actual,"TestUser : test_get_user_data wrong user info for frontoffice1");
+
+        $expected_userinfo['usergroup'] = 'Clerk';
+        $expected_userinfo['front_office'] = 'frontofficeMultipleService';
+        $expected_userinfo['serviceID'] = 0;
+        $actual = get_user_data("frontofficeMultipleService");
+        $this->assertEquals($expected_userinfo,$actual,"TestUser : test_get_user_data wrong user info for frontofficeMultipleService");
+
+        $expected_userinfo['usergroup'] = 'Admin';
+        $expected_userinfo['front_office'] = 'admin';
+        $expected_userinfo['serviceID'] = -1;
+        $actual = get_user_data("admin");
+        $this->assertEquals($expected_userinfo,$actual,"TestUser : test_get_user_data wrong user info for admin");
+    }
+
+    public function test_user_login(){
+        $post_data = array();
+        $post_data['front_office'] = 'frontoffice1';
+        $post_data['password'] = 'frontoffice1';
+        $this->assertTrue(user_login($post_data),"TestUser : test_user_login frontoffice1 had the right credentials");
+        $post_data['front_office'] = 'frontOffice';
+        $this->assertFalse(user_login($post_data),"TestUser : test_user_login frontOffice hadn't the right credentials");
+        $post_data['front_office'] = 'admin';
+        $post_data['password'] = 'admin';
+        $this->assertTrue(user_login($post_data),"TestUser : test_user_login admin had the right credentials");
+        $post_data['password'] = 'wrong';
+        $this->assertFalse(user_login($post_data),"TestUser : test_user_login admin hadn't the right credentials");
+    }
+
+    public function test_register(){
+        unset($_SESSION['usergroup']);
+        $this->assertFalse(register("",""),"TestUser : test_register session[usergroup] wasn't set");
+        $_SESSION['usergroup']='Clerk';
+        $this->assertFalse(register("",""),"TestUser : test_register session[usergroup] wasn't admin");
+        //$_SESSION['usergroup']='Admin';
+        //$this->assertFalse(register("frontoffice1","frontoffice1"),"TestUser : test_register i've just registered an existing user");
+        //register("frontoffice3","frontoffice3");
+        //$sql = "SELECT FrontOffice FROM Authentication WHERE Frontoffice = 'frontoffice3';";
+        //$val = perform_SELECT_return_single_value($sql);
+        //$this->assertEquals("frontoffice3",$val,"TestUser : test_register registered user is not present in the db");
+    }
+
+    public function test_add_new_service(){
+        unset($_SESSION['usergroup']);
+        $this->assertFalse(add_new_service("test"),"TestUser : test_add_new_service session[usergroup] was not set");
+        $_SESSION['usergroup']='Clerk';
+        $this->assertFalse(add_new_service("test"),"TestUser : test_add_new_service I wasn't the admin");
+        $_SESSION['usergroup'] = 'Admin';
+        $res = add_new_service("test");
+        $this->assertTrue($res,"TestUser : test_add_new_service transaction should have been successfull");
+    }
+
     public function test_is_logged(){
         $_SESSION['front_office']="test";
         $this->assertTrue(is_logged(),"TestUser : test_is_logged function is_logged should return true.");
