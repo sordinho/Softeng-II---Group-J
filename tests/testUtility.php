@@ -80,6 +80,7 @@ function dropTestDatabase() {
  */
 function perform_SELECT_return_single_value($sql) {
     $conn = TestsConnectMySQL();
+
     if ($result = $conn->query($sql)) {
         $row = $result->fetch_array();
         $value = $row[0];
