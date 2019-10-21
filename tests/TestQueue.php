@@ -74,12 +74,11 @@ class TestQueue extends TestCase
             "SELECT MAX(TicketNumber) FROM Queue WHERE ServiceID ='{1}'"
         );
 
-        add_top($chosen_service);
 
         $max_after = perform_SELECT_return_single_value(
             "SELECT MAX(TicketNumber) FROM Queue WHERE ServiceID ='{1}'"
         );
-
+        printf("\n\n%d---->%d\n\n",$max_before,$max_after);
         $this->assertTrue($max_after == ($max_before + 1), "TestQueue: test_add_top not performed correctly or not performed");
     }
 

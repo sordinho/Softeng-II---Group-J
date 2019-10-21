@@ -111,7 +111,7 @@ function get_services_as_list_html(){
         $conn->close();
     }
     else{
-        $content .= '<option value="Error">No current service were found</option>';
+        $content .= '<option value="Error">No current services were found</option>';
     }
     return $content;
 }
