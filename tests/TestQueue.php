@@ -31,6 +31,17 @@ class TestQueue extends TestCase
 
     protected function setUp():void {
         createTestDatabase();
+       /*
+        * Configuration before every test
+        *
+        * ----------------------------------------------------------
+        * |ID  |ServiceID  |TicketNUmber   |Timestamp              |
+        * ----------------------------------------------------------
+        * |2   |2          |0              |2019-10-19 12:18:17    |
+        * |61  |1          |0              |2019-10-19 16:31:49    |
+        * |62  |1          |1              |2019-10-19 20:03:25    |
+        * ----------------------------------------------------------
+        */
     }
 
     public function test_add_dummy_ticket() {
@@ -84,19 +95,6 @@ class TestQueue extends TestCase
     }
 
     public function test_get_bottom(){
-
-        /*
-         * The actual configuration in Queue table is:
-         *
-         * ----------------------------------------------------------
-         * |ID  |ServiceID  |TicketNUmber   |Timestamp              |
-         * ----------------------------------------------------------
-         * |2   |2          |0              |2019-10-19 12:18:17    |
-         * |61  |1          |0              |2019-10-19 16:31:49    |
-         * |62  |1          |1              |2019-10-19 20:03:25    |
-         * ----------------------------------------------------------
-         */
-
         $service_name = "Packages";
         $service_ID = get_serviceID_by_service_name($service_name);
         perform_INSERT_or_DELETE("INSERT INTO Queue(ServiceID, TicketNumber) VALUES('{$service_ID}', 2)");
@@ -124,11 +122,50 @@ class TestQueue extends TestCase
     }
 
     public function test_get_next() {
-        //TEST CASE: $serviceID == 0
-        //TEST CASE: $serviceID != -1 AND $serviceID != 0
-        //TEST CASE: $serviceID == -1
+    //assumendo la configurazione post-setup
+    //TEST CASE: $serviceID == 0
+        //caso con code di lunghezza diversa => prende dalla coda più lunga il biglietto con numero più basso
 
+        $ticket_info1 = get_next(0);
+        $this->assertTrue($ticket_info1['ticketN'] == 0, "TestQueue: test_get_next not performed correctly or not performed");
+        $this->assertTrue($ticket_info1['serviceID'] == 1, "TestQueue: test_get_next not performed correctly or not performed");
+        //caso con code di lunghezza uguale => prende il timestamp minore
+
+        perform_INSERT_or_DELETE("INSERT INTO Queue(ServiceID, TicketNumber) VALUES(2, 1)");
+        perform_INSERT_or_DELETE("INSERT INTO Queue(ServiceID, TicketNumber) VALUES(2, 2)");
+        perform_INSERT_or_DELETE("INSERT INTO Queue(ServiceID, TicketNumber) VALUES(1, 1)");
+
+        /*
+         * The actual configuration in Queue table is:
+         *
+         * ----------------------------------------------------------
+         * |ID  |ServiceID  |TicketNUmber   |Timestamp              |
+         * ----------------------------------------------------------
+         * |2   |2          |0              |2019-10-19 12:18:17    |
+         * |61  |1          |0              |2019-10-19 16:31:49    |
+         * |62  |1          |1              |2019-10-19 20:03:25    |
+         * |?   |**2**      |**1**          |?                      |<<<
+         * |?   |**2**      |**2**          |?                      |<<<
+         * |?   |**1**      |**1**          |?                      |<<< the element with the latest timestamp
+         * ----------------------------------------------------------
+         */
+
+        $ticket_info2 = get_next(0);
+        $this->assertTrue($ticket_info2['ticketN'] == 0, "TestQueue: test_get_next not performed correctly or not performed");
+        $this->assertTrue($ticket_info2['serviceID'] == 1, "TestQueue: test_get_next not performed correctly or not performed");
+
+        //TEST CASE: $serviceID != -1 AND $serviceID != 0 => ritorna il biglietto con numero minore
+        $ticket_info3 = get_next(1);
+
+        $this->assertTrue($ticket_info3['ticketN'] == 0, "TestQueue: test_get_next not performed correctly or not performed");
+        $this->assertTrue($ticket_info3['serviceID'] == 1, "TestQueue: test_get_next not performed correctly or not performed");
+
+        $ticket_info4 = get_next(2);
+        $this->assertTrue($ticket_info4['ticketN'] == 0, "TestQueue: test_get_next not performed correctly or not performed");
+        $this->assertTrue($ticket_info4['serviceID'] == 2, "TestQueue: test_get_next not performed correctly or not performed");
     }
+
+
 
     protected function tearDown():void{
         dropTestDatabase();
