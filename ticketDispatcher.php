@@ -2,6 +2,9 @@
 require_once("customer.php");
 require_once("functions.php");
 
+/**
+ * When generate ticket button is pressed
+ */
 if ($_GET['action'] == "generateTicket" && isset($_POST['service'])) {
     // Call generate ticket function
     $ticket_info = add_top($_POST['service']);

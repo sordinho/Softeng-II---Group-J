@@ -3,6 +3,9 @@ require_once("config.php");
 require_once("functions.php");
 require_once("user.php");
 
+/**
+ * For registering a new clerk's account
+ */
 if( !isset( $_POST['front_office'])  && isset($_GET["front_office"])) {
     $content = <<< EOT
     <div class="alert alert-success" role="alert">
