@@ -52,8 +52,13 @@ function customer_get_timestamp() {
  * @return bool|mixed
  */
 function has_pending_ticket() {
-    //return true;//TODO: remove or comment after testing
     return isset($_SESSION['pendingTicket']) ? $_SESSION['pendingTicket'] : false;
+}
+function set_served_ticket() {
+    $_SESSION['servedTicket'] = true;
+}
+function has_served_ticket() {
+    return isset($_SESSION['servedTicket']) ? $_SESSION['servedTicket'] : false;
 }
 
 /**
@@ -142,10 +147,16 @@ function get_ticket_html() {
         session_destroy();
         setcookie(session_name(), '', time() - 42000, '/');
     } elseif ($cur_ticket == $ticket_info["ticketN"]) { // Show message when is your turn
+        set_served_ticket();
         $metarefresh .= '<div class="alert alert-success" role="alert">
         It\'s your turn!<br>
     </div> ';
 
+    }elseif ($cur_ticket == 0 && has_served_ticket()){ 
+        // if no peole are after the customer and the dummy ticket kick in
+        session_unset();
+        session_destroy();
+        setcookie(session_name(), '', time() - 42000, '/');
     }
     return $metarefresh . $html_ticket;
 }
