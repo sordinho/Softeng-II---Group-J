@@ -119,7 +119,7 @@ function get_services_as_list_html() {
 
 /**
  *
- * :oads datas from DB and print HTML string to generate the side panel
+ * Loads datas from DB and print HTML string to generate the side panel
  * @param null
  *
  * @return null
@@ -136,20 +136,20 @@ function get_side_content_as_html() {
         . '<p class="unit">Services</p>
             </div>
         <div class="network smartobject">
-        <p class="title">Waiting</p>' . $tot_lenght_html_paragraph
-        . '
+        <p class="title">Waiting</p>
+        <p class="tally">X</p>
         <p class="unit">in queue</p>
         </div>      
 
         <div class="network actions">
             <p class="title">Estimated</p>
-            <p class="tally">2</p>
+            <p class="tally">X</p>
             <p class="unit">Waiting time</p>
         </div>
 
         <div class="network user">
             <p class="title">Total</p>
-            <p class="tally">156</p>
+            <p class="tally">X</p>
             <p class="unit">People</p>
         </div>
             <div class="ui-horizontal-lines"></div>

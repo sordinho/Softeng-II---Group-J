@@ -53,7 +53,7 @@ if (!isset($_SESSION['front_office']) && isset($_POST['front_office'])) {
     die();
 }
 
-$side_content = get_side_content_as_html();
+$side_content = "";
 
 if (is_admin()) {
     $content = get_admin_content();
