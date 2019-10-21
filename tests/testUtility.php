@@ -91,7 +91,6 @@ function perform_INSERT_or_DELETE($sql) {
     $conn = TestsConnectMySQL();
 
     if ($result = $conn->query($sql)) {
-        $result->close();
         return true;
     }
     else {
