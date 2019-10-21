@@ -105,17 +105,13 @@ class TestUser extends TestCase
         $res = set_logged(null);
         $this->assertFalse($res,"TestUser : test_set_logged_BOUNDARY function set_logged should have returned false having null input.");
     }
-    /*
-//Memorizza nelle sessioni lo front_office
-function set_front_office($front_office)
-{
-    $_SESSION['front_office'] = $front_office;
-    return;
-}
+
+    //TODO: same as set_logged?
     public function test_set_front_office(){
+        $front_office = 'frontoffice1';
+        set_front_office($front_office);
 
     }
-    */
 
     public function test_set_name(){
         $name = "test";
@@ -227,7 +223,7 @@ function set_front_office($front_office)
         $this->assertFalse(clerk_register_ticket($ticket_info),"TestUser: test_clerk_register_ticket_BOUNDARY it shouldn't be possible to set non numerical values for ticketN");
 
     }
-    public function test_clerk_get_our_ticket(){
+    public function test_clerk_get_cur_ticket(){
         $_SESSION['ticketN'] = 1;
         $_SESSION['serviceID'] = 1;
         $timestamp = mktime(11,00,00,10,17,2019);
@@ -388,12 +384,54 @@ function set_front_office($front_office)
     </div>';
         $this->assertEquals($expected,get_admin_content(),"TestUser : test_get_admin_content wrong returned value");
     }
-    /*function get_admin_side_content()
-    {//todo
-        $admin_side_content = get_side_content_as_html();
-        return $admin_side_content;
 
-    }*/
+    function test_get_admin_side_content() { //todo
+
+        $tot_lenght_html_paragraph ='<p class="tally">3</p>';
+
+        $tot_num_of_service ='<p class="tally">2</p>';
+
+        $side_content = '
+        <section class="component-nstats">
+            <div class="nstats">
+            <div class="networks">
+                <div class="network uptime">
+                <p class="title">Service</p>'.$tot_num_of_service
+            .'<p class="unit">Services</p>
+            </div>
+        <div class="network smartobject">
+        <p class="title">Waiting</p>'.$tot_lenght_html_paragraph
+            .'
+        <p class="unit">in queue</p>
+        </div>      
+
+        <div class="network actions">
+            <p class="title">Estimated</p>
+            <p class="tally">2</p>
+            <p class="unit">Waiting time</p>
+        </div>
+
+        <div class="network user">
+            <p class="title">Total</p>
+            <p class="tally">156</p>
+            <p class="unit">People</p>
+        </div>
+            <div class="ui-horizontal-lines"></div>
+        </div>
+    
+        <div class="viralability">
+            <div class="stats-wrapper">
+            <p class="tally">Stats Infos</p>
+            <p class="unit">(realtime)</p>
+            </div>
+    
+        </div>
+        </div>
+        </section>';
+        $actual = get_admin_side_content();
+        $this->assertEquals($side_content,$actual,"TestFunction: test_get_side_content_as_html wrong returned value");
+    }
+
     public function test_is_email(){
         $email = "not an email";
         $res = is_email($email);
