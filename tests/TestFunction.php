@@ -132,7 +132,7 @@ function get_side_content_as_html(){
         </div>
         </div>
         </section>';
-        $actual =get_side_content_as_html();
+        $actual = get_side_content_as_html();
         $this->assertEquals($side_content,$actual,"TestFunction: test_get_side_content_as_html wrong returned value");
     }
 }
