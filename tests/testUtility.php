@@ -6,7 +6,7 @@ require_once 'testConfig.php';
 /**
  * To be used in setUp() and tearDown() methods for tests
  *
- * Configuration of the DB:
+ * Configuration of Queue in DB:
  * ----------------------------------------------------------
  * |ID  |ServiceID  |TicketNUmber   |Timestamp              |
  * ----------------------------------------------------------
@@ -14,6 +14,15 @@ require_once 'testConfig.php';
  * |61  |1          |0              |2019-10-19 16:31:49    |
  * |62  |1          |1              |2019-10-19 20:03:25    |
  * ----------------------------------------------------------
+ *
+ * Configuration of Service in DB:
+ * ------------------------------
+ * |Name        |ID |Counter    |
+ * ------------------------------
+ * |Packages    |1  |8          |
+ * |Accounts    |2  |0          |
+ * ------------------------------
+
  * @param null
  *
  * @return null

@@ -218,7 +218,7 @@ function delete_ticket($serviceID, $ticketN) {
 }
 
 /**
- * Aggiorna le statistiche in autentication e service
+ * Aggiorna le statistiche in authentication e service
  * Si incrementano i clienti serviti
  * @param $serviceID
  * @return bool
@@ -243,8 +243,12 @@ function update_stats($serviceID) {
         return false;
     }
 }
-/*Get current queued ticket for a given service.
-    return -1 on failure*/
+
+/**
+ * Get current queued ticket for a given service.
+ * @param $service_id
+ * @return -1 on failure
+ */
 function get_length_by_service_id($service_id){
     //SELECT COUNT(ID) FROM Queue WHERE ServiceID=3
     $conn = connectMySQL();

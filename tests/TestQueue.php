@@ -12,7 +12,7 @@ class TestQueue extends TestCase
 
     public function get_top($service_name){
         $conn = connectMySQL();
-        $sql = "SELECT MAX(TicketNumber) as TicketN FROM Queue JOIN Service ON ServiceID = Service.ID WHERE Service.Name = '$service_name'";
+        $sql = "SELECT MAX(TicketNumber) as TicketN FROM Queue JOIN Service ON ServiceID = Service.ID WHERE Service.Name = $service_name";
         if ($result = $conn->query($sql)) {
             /* fetch object array */
             $row = $result->fetch_object();
@@ -96,9 +96,9 @@ class TestQueue extends TestCase
     public function test_get_bottom(){
         $service_name = "Packages";
         $service_ID = get_serviceID_by_service_name($service_name);
-        perform_INSERT_or_DELETE("INSERT INTO Queue(ServiceID, TicketNumber) VALUES('{$service_ID}', 2)");
-        perform_INSERT_or_DELETE("INSERT INTO Queue(ServiceID, TicketNumber) VALUES('{$service_ID}', 3)");
-        perform_INSERT_or_DELETE("INSERT INTO Queue(ServiceID, TicketNumber) VALUES('{$service_ID}', 4)");
+        perform_INSERT_or_DELETE("INSERT INTO Queue(ServiceID, TicketNumber) VALUES($service_ID, 2)");
+        perform_INSERT_or_DELETE("INSERT INTO Queue(ServiceID, TicketNumber) VALUES($service_ID, 3)");
+        perform_INSERT_or_DELETE("INSERT INTO Queue(ServiceID, TicketNumber) VALUES($service_ID, 4)");
 
         /*
          * The actual configuration in Queue table is:
@@ -121,7 +121,7 @@ class TestQueue extends TestCase
     }
 
     public function test_get_next() {
-    //assumendo la configurazione post-setup
+    //database configuration of queue table is given in setUp()
     //TEST CASE: $serviceID == 0
         //caso con code di lunghezza diversa => prende dalla coda più lunga il biglietto con numero più basso
 
@@ -164,7 +164,61 @@ class TestQueue extends TestCase
         $this->assertTrue($ticket_info4['serviceID'] == 2, "TestQueue: test_get_next not performed correctly or not performed");
     }
 
+    public function test_delete_ticket() {
+        //database configuration of queue table is given in setUp()
 
+        $serviceID = 2;
+        $ticketN = 2;
+
+        //perform select before
+        $count_before = perform_SELECT_return_single_value("SELECT COUNT(*) FROM Queue WHERE TicketNumber = $ticketN AND ServiceID =$serviceID");
+        $this->assertTrue($count_before == 1, "Something went wrong with the database configuration. Expected >> 1");
+
+        //perform delete
+        delete_ticket($serviceID,$ticketN);
+
+        //perform select to verify COUNT == 0
+        $count_after = perform_SELECT_return_single_value("SELECT COUNT(*) FROM Queue WHERE TicketNumber = $ticketN AND ServiceID =$serviceID");
+        $this->assertTrue($count_after == 0, "TestQueue: test_delete_ticket not performed correctly or not performed");
+    }
+
+    public function test_update_stats() {
+
+    }
+
+    public function test_get_length_by_service_id() {
+        perform_INSERT_or_DELETE("INSERT INTO Queue(ServiceID, TicketNumber) VALUES(2, 1)");
+        perform_INSERT_or_DELETE("INSERT INTO Queue(ServiceID, TicketNumber) VALUES(2, 2)");
+
+        /*
+         * The actual configuration in Queue table is:
+         *
+         * ----------------------------------------------------------
+         * |ID  |ServiceID  |TicketNUmber   |Timestamp              |
+         * ----------------------------------------------------------
+         * |2   |2          |0              |2019-10-19 12:18:17    |
+         * |61  |1          |0              |2019-10-19 16:31:49    |
+         * |62  |1          |1              |2019-10-19 20:03:25    |
+         * |?   |**2**      |**1**          |?                      |<<<
+         * |?   |**2**      |**2**          |?                      |<<<
+         * ----------------------------------------------------------
+         */
+
+        $lenght1 = get_length_by_service_id(1);
+        $lenght2 = get_length_by_service_id(2);
+
+        $this->assertTrue($lenght1 = 2, "TestQueue: test_get_lenght_by_service_id not performed correctly or not performed");
+        $this->assertTrue($lenght2 = 3, "TestQueue: test_get_lenght_by_service_id not performed correctly or not performed");
+    }
+
+    public function test_get_total_service_num() {
+        $num_services = get_total_service_num();
+        $this->assertTrue($num_services == 2, "TestQueue: get_total_service_num not performed correctly or not performed");
+    }
+
+    public function test_get_total_lenght() {
+        $this->assertTrue(get_total_lenght() == 3, "TestQueue: test_get_total_lenght not performed correctly or not performed");
+    }
 
     protected function tearDown():void{
         dropTestDatabase();
