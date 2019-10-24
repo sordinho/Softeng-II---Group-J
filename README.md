@@ -2,10 +2,10 @@
 
 ## Storyline :triangular_flag_on_post:
 
-### Live demo - 22/10/2019
+### Live demo - 22/10/2019 :video_game:
 [Demo](http://softeng2.my.to/)
 
-### Retrospective - 23/10/2019
+### Retrospective - 23/10/2019 :chart_with_upwards_trend:
 [Presentation](https://docs.google.com/presentation/d/1EjgGQlvS05d9Lqzb8mbGBLriGfQPYrOnhWwMv5Vxm-I/edit?usp=sharing)
 
 ## The Team :busts_in_silhouette: 
