@@ -241,7 +241,7 @@ function update_stats($serviceID) {
     $result2 = $conn->query($sql2);
 
     if ($result1 && $result2) {
-        return ($conn->affected_rows === 1 && $conn->affected_rows === 1);
+        return ($conn->affected_rows === 1);
     } else {
         printf("Error message: %s\n", $conn->error);
         return false;
